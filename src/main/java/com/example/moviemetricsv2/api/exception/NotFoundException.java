@@ -12,4 +12,8 @@ public class NotFoundException extends RuntimeException{
     public static NotFoundException userNotFoundByEmail(String email) {
         return new NotFoundException("User with email " + email + " not found");
     }
+
+    public static NotFoundException roleNotFound(String name) {
+        return new NotFoundException("Role with name " + name + " not found");
+    }
 }
