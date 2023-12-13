@@ -34,21 +34,11 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
         Set<Permission> userPrivileges = new HashSet<>();
 
-        userPrivileges.add(privileges.get(EPermission.DISPLAY_MOVIES));
-        userPrivileges.add(privileges.get(EPermission.DISPLAY_ALL_COMMENTS));
-        userPrivileges.add(privileges.get(EPermission.UPDATE_OWN_COMMENTS));
-        userPrivileges.add(privileges.get(EPermission.DELETE_OWN_COMMENTS));
-
         createRoleIfNotFound(ERole.USER.toString(), userPrivileges);
 
         Set<Permission> moderatorPrivileges = new HashSet<>();
 
-        moderatorPrivileges.add(privileges.get(EPermission.DISPLAY_MOVIES));
         moderatorPrivileges.add(privileges.get(EPermission.DISPLAY_USERS));
-        moderatorPrivileges.add(privileges.get(EPermission.DISPLAY_ALL_COMMENTS));
-        moderatorPrivileges.add(privileges.get(EPermission.UPDATE_MOVIES));
-        moderatorPrivileges.add(privileges.get(EPermission.UPDATE_ANY_COMMENT));
-        moderatorPrivileges.add(privileges.get(EPermission.DELETE_ANY_COMMENT));
 
         createRoleIfNotFound(ERole.MODERATOR.toString(), moderatorPrivileges);
 

@@ -1,12 +1,13 @@
 package com.example.moviemetricsv2.api.repository;
 
+import com.example.moviemetricsv2.api.model.Role;
 import com.example.moviemetricsv2.api.model.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-
+import java.util.HashSet;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -16,13 +17,21 @@ class IUserRepositoryTest {
 
     @Autowired
     IUserRepository userRepository;
+    @Autowired
+    IRoleRepository roleRepository;
 
     @Test
     @DisplayName("Get User By Email: Successful")
-    void itShouldCheckIfUserExistsByEmail() {
+    void testCanFindByEmailIfUserDoesExist() {
         // given
         String email = "test@test.com";
-        User user = User.builder().email(email).password("test").build();
+        Role role = roleRepository.save(
+                Role.builder()
+                        .name("TestRole")
+                        .permissions(new HashSet<>())
+                        .build()
+        );
+        User user = User.builder().email(email).password("test").role(role).build();
         userRepository.save(user);
 
         // when
@@ -35,7 +44,7 @@ class IUserRepositoryTest {
 
     @Test
     @DisplayName("Get User By Email: Not Found")
-    void itShouldCheckIfUserDoesNotExistByEmail() {
+    void testCanFindByEmailIfUserDoesNotExist() {
         // given
         String email = "test@test.com";
 

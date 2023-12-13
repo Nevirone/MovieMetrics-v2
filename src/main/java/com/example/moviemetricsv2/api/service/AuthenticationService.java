@@ -34,7 +34,7 @@ public class AuthenticationService {
 
         Optional<Role> userRole = roleRepository.findByName(ERole.USER.toString());
         if (userRole.isEmpty())
-            throw new InternalServerException("Role " + ERole.USER.toString() + " not found");
+            throw new InternalServerException("Role " + ERole.USER + " not found");
 
         User user =  userRepository.save(
                 User.builder()
@@ -45,15 +45,16 @@ public class AuthenticationService {
         );
 
         String jwt = jwtService.generateToken(user);
-        return AuthenticationResponse.builder().token(jwt).build();
+        return AuthenticationResponse.builder().token(jwt).message("Registered").build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) throws NotFoundException {
         Optional<User> user = userRepository.findByEmail(authenticationRequest.getEmail());
 
-        if (user.isEmpty()) throw NotFoundException.userNotFoundByEmail(authenticationRequest.getEmail());
+        if (user.isEmpty() || !passwordEncoder.matches(authenticationRequest.getPassword(), user.get().getPassword()))
+            return AuthenticationResponse.builder().message("Invalid credentials").build();
 
         String jwt = jwtService.generateToken(user.get());
-        return AuthenticationResponse.builder().token(jwt).build();
+        return AuthenticationResponse.builder().token(jwt).message("Logged in").build();
     }
 }

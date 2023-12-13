@@ -2,7 +2,10 @@ package com.example.moviemetricsv2.api.service;
 
 import com.example.moviemetricsv2.api.exception.DataConflictException;
 import com.example.moviemetricsv2.api.exception.NotFoundException;
+import com.example.moviemetricsv2.api.model.ERole;
+import com.example.moviemetricsv2.api.model.Role;
 import com.example.moviemetricsv2.api.model.User;
+import com.example.moviemetricsv2.api.repository.IRoleRepository;
 import com.example.moviemetricsv2.api.repository.IUserRepository;
 import com.example.moviemetricsv2.api.request.UserDto;
 import org.junit.jupiter.api.AfterEach;
@@ -12,7 +15,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.HashSet;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -26,26 +31,38 @@ class UserServiceTest {
 
     @Mock
     private IUserRepository userRepository;
+    @Mock
+    private IRoleRepository roleRepository;
+    @Mock
+    private PasswordEncoder passwordEncoder;
 
     private UserService userService;
 
     private User createUser(String email) {
         return User.builder()
                 .email(email)
-                .password("Testpas1")
+                .password("TestPassword1")
+                .role(
+                    Role.builder()
+                        .name(ERole.USER.toString())
+                        .permissions(new HashSet<>())
+                        .build()
+                )
                 .build();
     }
 
     private UserDto createUserDto() {
         return UserDto.builder()
                 .email("test@test.com")
-                .password("Testpas1")
+                .password("TestPassword1")
+                .isPasswordEncrypted(true)
+                .role(ERole.USER.toString())
                 .build();
     }
     @BeforeEach
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
-        userService = new UserService(userRepository);
+        userService = new UserService(userRepository, roleRepository, passwordEncoder);
     }
 
     @AfterEach
@@ -58,6 +75,9 @@ class UserServiceTest {
     void canAddUser() {
         // given
         UserDto userDto = createUserDto();
+
+        given(roleRepository.findByName(userDto.getRole()))
+                .willReturn(Optional.of(Role.builder().build()));
 
         // when
         userService.create(userDto);
@@ -88,6 +108,25 @@ class UserServiceTest {
         assertThatThrownBy(() -> userService.create(userDto))
                 .isInstanceOf(DataConflictException.class)
                 .hasMessageContaining("Email " + userDto.getEmail() + " is taken");
+    }
+
+    @Test
+    @DisplayName("Create User: Role not found")
+    void addingUserWillThrowWhenRoleIsNotFound() {
+        // given
+        UserDto userDto = createUserDto();
+
+        given(userRepository.findByEmail(userDto.getEmail()))
+                .willReturn(Optional.empty());
+
+        given(roleRepository.findByName(userDto.getRole()))
+                .willReturn(Optional.empty());
+
+        // when
+        // then
+        assertThatThrownBy(() -> userService.create(userDto))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("Role with name " + userDto.getRole() + " not found");
     }
 
     @Test
@@ -182,6 +221,9 @@ class UserServiceTest {
         given(userRepository.findByEmail(userDto.getEmail()))
                 .willReturn(Optional.empty());
 
+        given(roleRepository.findByName(userDto.getRole()))
+                .willReturn(Optional.of(Role.builder().build()));
+
         // when
         userService.update(id, userDto);
 
@@ -233,6 +275,29 @@ class UserServiceTest {
         assertThatThrownBy(() -> userService.update(id, userDto))
                 .isInstanceOf(DataConflictException.class)
                 .hasMessageContaining("Email " + userDto.getEmail() + " is taken");
+    }
+
+    @Test
+    @DisplayName("Update User: Role not found")
+    void updatingUserWillThrowWhenRoleNotFound() {
+        // given
+        Long id = 2L;
+        UserDto userDto = createUserDto();
+
+        given(userRepository.findById(2L))
+                .willReturn(Optional.of(User.builder().build()));
+
+        given(userRepository.findByEmail(userDto.getEmail()))
+                .willReturn(Optional.empty());
+
+        given(roleRepository.findByName(userDto.getRole()))
+                .willReturn(Optional.empty());
+
+        // when
+        // then
+        assertThatThrownBy(() -> userService.update(id, userDto))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("Role with name " + userDto.getRole() + " not found");
     }
 
     @Test

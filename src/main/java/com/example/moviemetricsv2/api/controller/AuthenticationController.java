@@ -1,5 +1,6 @@
 package com.example.moviemetricsv2.api.controller;
 
+import com.example.moviemetricsv2.api.exception.DataConflictException;
 import com.example.moviemetricsv2.api.model.User;
 import com.example.moviemetricsv2.api.repository.IUserRepository;
 import com.example.moviemetricsv2.api.request.AuthenticationRequest;
