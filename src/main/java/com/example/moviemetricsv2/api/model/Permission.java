@@ -1,9 +1,11 @@
 package com.example.moviemetricsv2.api.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -14,13 +16,12 @@ import java.util.Set;
 @Table(name = "permissions")
 public class Permission {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "permission_gen")
-    @SequenceGenerator(name = "permission_gen", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     private String name;
 
-    @JsonIgnore
+    @JsonBackReference
     @ManyToMany(mappedBy = "permissions")
-    private Set<Role> roles;
+    private List<Role> roles;
 }

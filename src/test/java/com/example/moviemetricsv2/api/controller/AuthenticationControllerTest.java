@@ -57,8 +57,8 @@ public class AuthenticationControllerTest {
 
     @BeforeAll
     public void setup() {
-        userRole = roleRepository.findByName(ERole.USER.toString())
-                .orElseThrow(() -> NotFoundException.roleNotFound(ERole.USER.toString()));
+        userRole = roleRepository.findByNameIgnoreCase(ERole.User.getName())
+                .orElseThrow(() -> NotFoundException.roleNotFoundByName(ERole.User.getName()));
     }
     @BeforeEach
     public void cleanUp() {
@@ -82,7 +82,7 @@ public class AuthenticationControllerTest {
                 HttpMethod.POST, entity, String.class);
 
         AuthenticationResponse authenticationResponse = objectMapper.readValue(response.getBody(), AuthenticationResponse.class);
-        Optional<User> found = userRepository.findByEmail(registerRequest.getEmail());
+        Optional<User> found = userRepository.findByEmailIgnoreCase(registerRequest.getEmail());
 
         // then
         System.out.println(response.getBody());
@@ -110,7 +110,7 @@ public class AuthenticationControllerTest {
                 getURL("/auth/register"),
                 HttpMethod.POST, entity, String.class);
 
-        Optional<User> found = userRepository.findByEmail(registerRequest.getEmail());
+        Optional<User> found = userRepository.findByEmailIgnoreCase(registerRequest.getEmail());
 
         // then
         System.out.println(response.getBody());
@@ -138,7 +138,7 @@ public class AuthenticationControllerTest {
                 getURL("/auth/register"),
                 HttpMethod.POST, entity, String.class);
 
-        Optional<User> found = userRepository.findByEmail(registerRequest.getEmail());
+        Optional<User> found = userRepository.findByEmailIgnoreCase(registerRequest.getEmail());
 
         // then
         System.out.println(response.getBody());

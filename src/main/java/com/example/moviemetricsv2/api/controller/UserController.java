@@ -3,7 +3,7 @@ package com.example.moviemetricsv2.api.controller;
 import com.example.moviemetricsv2.api.exception.DataConflictException;
 import com.example.moviemetricsv2.api.exception.NotFoundException;
 import com.example.moviemetricsv2.api.model.User;
-import com.example.moviemetricsv2.api.request.UserDto;
+import com.example.moviemetricsv2.api.dto.UserDto;
 import com.example.moviemetricsv2.api.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +20,7 @@ import java.util.List;
 public class UserController extends BaseController implements ICrudController<User, UserDto> {
     private final UserService userService;
 
+    @Override
     @PreAuthorize("hasAuthority('CREATE_USERS')")
     @PostMapping
     public ResponseEntity<User> create(@Valid @RequestBody UserDto userDto)
@@ -27,12 +28,14 @@ public class UserController extends BaseController implements ICrudController<Us
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userDto));
     }
 
+    @Override
     @PreAuthorize("hasAuthority('DISPLAY_USERS')")
     @GetMapping
     public ResponseEntity<List<User>> getAll() {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAll());
     }
 
+    @Override
     @PreAuthorize("hasAuthority('DISPLAY_USERS')")
     @GetMapping("/{id}")
     public ResponseEntity<User> get(@PathVariable Long id)
@@ -40,6 +43,7 @@ public class UserController extends BaseController implements ICrudController<Us
         return ResponseEntity.status(HttpStatus.OK).body(userService.get(id));
     }
 
+    @Override
     @PreAuthorize("hasAuthority('UPDATE_USERS')")
     @PatchMapping("/{id}")
     public ResponseEntity<User> update(@PathVariable Long id, @Valid @RequestBody UserDto userDto)
@@ -47,6 +51,7 @@ public class UserController extends BaseController implements ICrudController<Us
         return ResponseEntity.status(HttpStatus.OK).body(userService.update(id, userDto));
     }
 
+    @Override
     @PreAuthorize("hasAuthority('DELETE_USERS')")
     @DeleteMapping("/{id}")
     public ResponseEntity<User> delete(@PathVariable Long id)

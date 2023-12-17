@@ -1,14 +1,17 @@
 package com.example.moviemetricsv2.api.service;
 
+import com.example.moviemetricsv2.api.exception.DataConflictException;
+import com.example.moviemetricsv2.api.exception.NotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.xml.crypto.Data;
 import java.util.List;
 
 public interface IObjectService<T, TDto> {
-    T create(TDto dto);
+    T create(TDto dto) throws DataConflictException;
 
-    T get(Long id);
+    T get(Long id) throws NotFoundException;
     List<T> getAll();
-    T update(Long id, TDto dto);
-    T delete(Long id);
+    T update(Long id, TDto dto) throws DataConflictException, NotFoundException;
+    T delete(Long id) throws NotFoundException;
 }

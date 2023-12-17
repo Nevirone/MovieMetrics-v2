@@ -37,10 +37,12 @@ public class BaseController {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
-        List<String> errors = new ArrayList<>();
+        Map<String, String> errors = new HashMap<>();
 
-        ex.getBindingResult().getFieldErrors().forEach(
-                fieldError -> errors.add(fieldError.getDefaultMessage()));
+        ex.getFieldErrors().forEach(error -> {
+            if (!errors.containsKey(error.getField()))
+                errors.put(error.getField(), error.getDefaultMessage());
+        });
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors.toString());
     }

@@ -7,7 +7,7 @@ import com.example.moviemetricsv2.api.model.Role;
 import com.example.moviemetricsv2.api.model.User;
 import com.example.moviemetricsv2.api.repository.IRoleRepository;
 import com.example.moviemetricsv2.api.repository.IUserRepository;
-import com.example.moviemetricsv2.api.request.UserDto;
+import com.example.moviemetricsv2.api.dto.UserDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -17,7 +17,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -44,8 +44,8 @@ class UserServiceTest {
                 .password("TestPassword1")
                 .role(
                     Role.builder()
-                        .name(ERole.USER.toString())
-                        .permissions(new HashSet<>())
+                        .name(ERole.User.getName())
+                        .permissions(new ArrayList<>())
                         .build()
                 )
                 .build();
@@ -56,7 +56,7 @@ class UserServiceTest {
                 .email("test@test.com")
                 .password("TestPassword1")
                 .isPasswordEncrypted(true)
-                .role(ERole.USER.toString())
+                .role(ERole.User.getName())
                 .build();
     }
     @BeforeEach
@@ -76,7 +76,7 @@ class UserServiceTest {
         // given
         UserDto userDto = createUserDto();
 
-        given(roleRepository.findByName(userDto.getRole()))
+        given(roleRepository.findByNameIgnoreCase(userDto.getRole()))
                 .willReturn(Optional.of(Role.builder().build()));
 
         // when
@@ -98,10 +98,8 @@ class UserServiceTest {
         // given
         UserDto userDto = createUserDto();
 
-        given(userRepository.findByEmail(userDto.getEmail()))
-                .willReturn(Optional.of(
-                        createUser("testme@test.com")
-                ));
+        given(userRepository.existsByEmailIgnoreCase(userDto.getEmail()))
+                .willReturn(true);
 
         // when
         // then
@@ -116,10 +114,10 @@ class UserServiceTest {
         // given
         UserDto userDto = createUserDto();
 
-        given(userRepository.findByEmail(userDto.getEmail()))
+        given(userRepository.findByEmailIgnoreCase(userDto.getEmail()))
                 .willReturn(Optional.empty());
 
-        given(roleRepository.findByName(userDto.getRole()))
+        given(roleRepository.findByNameIgnoreCase(userDto.getRole()))
                 .willReturn(Optional.empty());
 
         // when
@@ -172,7 +170,7 @@ class UserServiceTest {
                 createUser("test@test.com")
         );
 
-        given(userRepository.findByEmail(userOptional.get().getEmail()))
+        given(userRepository.findByEmailIgnoreCase(userOptional.get().getEmail()))
                 .willReturn(userOptional);
 
         // when
@@ -188,7 +186,7 @@ class UserServiceTest {
         // given
         String email = "test@test.com";
 
-        given(userRepository.findByEmail(email))
+        given(userRepository.findByEmailIgnoreCase(email))
                 .willReturn(Optional.empty());
 
         // when
@@ -215,13 +213,13 @@ class UserServiceTest {
         Long id = 2L;
         UserDto userDto = createUserDto();
 
-        given(userRepository.findById(2L))
-                .willReturn(Optional.of(User.builder().build()));
+        given(userRepository.existsById(2L))
+                .willReturn(true);
 
-        given(userRepository.findByEmail(userDto.getEmail()))
+        given(userRepository.findByEmailIgnoreCase(userDto.getEmail()))
                 .willReturn(Optional.empty());
 
-        given(roleRepository.findByName(userDto.getRole()))
+        given(roleRepository.findByNameIgnoreCase(userDto.getRole()))
                 .willReturn(Optional.of(Role.builder().build()));
 
         // when
@@ -230,8 +228,8 @@ class UserServiceTest {
         // then
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
 
-        verify(userRepository).findById(id);
-        verify(userRepository).findByEmail(userDto.getEmail());
+        verify(userRepository).existsById(id);
+        verify(userRepository).existsByEmailIgnoreCase(userDto.getEmail());
 
         verify(userRepository).save(userArgumentCaptor.capture());
 
@@ -264,11 +262,11 @@ class UserServiceTest {
         Long id = 2L;
         UserDto userDto = createUserDto();
 
-        given(userRepository.findById(2L))
-                .willReturn(Optional.of(User.builder().build()));
+        given(userRepository.existsById(2L))
+                .willReturn(true);
 
-        given(userRepository.findByEmail(userDto.getEmail()))
-                .willReturn(Optional.of(User.builder().build()));
+        given(userRepository.existsByEmailIgnoreCase(userDto.getEmail()))
+                .willReturn(true);
 
         // when
         // then
@@ -284,13 +282,13 @@ class UserServiceTest {
         Long id = 2L;
         UserDto userDto = createUserDto();
 
-        given(userRepository.findById(2L))
-                .willReturn(Optional.of(User.builder().build()));
+        given(userRepository.existsById(2L))
+                .willReturn(true);
 
-        given(userRepository.findByEmail(userDto.getEmail()))
+        given(userRepository.findByEmailIgnoreCase(userDto.getEmail()))
                 .willReturn(Optional.empty());
 
-        given(roleRepository.findByName(userDto.getRole()))
+        given(roleRepository.findByNameIgnoreCase(userDto.getRole()))
                 .willReturn(Optional.empty());
 
         // when

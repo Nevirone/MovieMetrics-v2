@@ -1,13 +1,15 @@
 package com.example.moviemetricsv2.api.components;
 
 import com.example.moviemetricsv2.api.model.*;
-import com.example.moviemetricsv2.api.repository.IPermissionRepository;
-import com.example.moviemetricsv2.api.repository.IRoleRepository;
 import com.example.moviemetricsv2.api.repository.IUserRepository;
+import com.example.moviemetricsv2.api.service.MovieClassificationService;
+import com.example.moviemetricsv2.api.service.PermissionService;
+import com.example.moviemetricsv2.api.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.env.Environment;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -18,8 +20,10 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private final Environment environment;
 
     private final IUserRepository userRepository;
-    private final IRoleRepository roleRepository;
-    private final IPermissionRepository permissionRepository;
+    private final PasswordEncoder encoder;
+    private final PermissionService permissionService;
+    private final RoleService roleService;
+    private final MovieClassificationService movieClassificationService;
 
     boolean alreadySetup = false;
     @Override
@@ -28,44 +32,39 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
         Map<EPermission, Permission> privileges = new HashMap<>();
 
-        for (EPermission ePermission : EPermission.values()) {
-            privileges.put(ePermission, createPermissionIfNotFound(ePermission.toString()));
+        for (EMovieClassification eMovieClassification : EMovieClassification.values()) {
+            movieClassificationService.createIfNotFound(eMovieClassification.getName());
         }
 
-        Set<Permission> userPrivileges = new HashSet<>();
+        for (EPermission ePermission : EPermission.values()) {
+            privileges.put(ePermission, permissionService.findOrCreate(ePermission.getName()));
+        }
 
-        createRoleIfNotFound(ERole.USER.toString(), userPrivileges);
+        List<Permission> userPrivileges = new ArrayList<>();
 
-        Set<Permission> moderatorPrivileges = new HashSet<>();
+        userPrivileges.add(privileges.get(EPermission.DisplayMovies));
 
-        moderatorPrivileges.add(privileges.get(EPermission.DISPLAY_USERS));
+        roleService.createIfNotFound(ERole.User.getName(), userPrivileges);
 
-        createRoleIfNotFound(ERole.MODERATOR.toString(), moderatorPrivileges);
+        List<Permission> moderatorPrivileges = new ArrayList<>();
 
-        Set<Permission> adminPrivileges = new HashSet<>(privileges.values());
+        moderatorPrivileges.add(privileges.get(EPermission.DisplayMovies));
+        moderatorPrivileges.add(privileges.get(EPermission.CreateMovies));
+        moderatorPrivileges.add(privileges.get(EPermission.UpdateUsers));
+        moderatorPrivileges.add(privileges.get(EPermission.DeleteMovies));
 
-        Role adminRole = createRoleIfNotFound(ERole.ADMIN.toString(), adminPrivileges);
+        moderatorPrivileges.add(privileges.get(EPermission.DisplayUsers));
+
+        roleService.createIfNotFound(ERole.Moderator.getName(), moderatorPrivileges);
+
+        Role adminRole = roleService.findOrCreate(ERole.Admin.getName(), privileges.values().stream().toList());
 
         userRepository.save(
                 User.builder()
                         .email(environment.getProperty("root.root_access"))
-                        .password(environment.getProperty("root.root_password"))
+                        .password(encoder.encode(environment.getProperty("root.root_password")))
                         .role(adminRole)
                         .build()
         );
-    }
-
-    Permission createPermissionIfNotFound(String name) {
-        Optional<Permission> permission = permissionRepository.findByName(name);
-        return permission.orElseGet(() -> permissionRepository.save(
-                Permission.builder().name(name).build()
-        ));
-    }
-
-    Role createRoleIfNotFound(String name, Set<Permission> permissions) {
-        Optional<Role> role = roleRepository.findByName(name);
-        return role.orElseGet(() -> roleRepository.save(
-                Role.builder().name(name).permissions(permissions).build()
-        ));
     }
 }

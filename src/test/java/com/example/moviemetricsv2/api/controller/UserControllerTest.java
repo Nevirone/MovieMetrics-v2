@@ -7,7 +7,7 @@ import com.example.moviemetricsv2.api.model.User;
 import com.example.moviemetricsv2.api.repository.IRoleRepository;
 import com.example.moviemetricsv2.api.repository.IUserRepository;
 import com.example.moviemetricsv2.api.request.AuthenticationRequest;
-import com.example.moviemetricsv2.api.request.UserDto;
+import com.example.moviemetricsv2.api.dto.UserDto;
 import com.example.moviemetricsv2.api.response.AuthenticationResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -103,9 +103,14 @@ public class UserControllerTest {
     }
     @BeforeAll
     public void setup() throws JsonProcessingException {
-        userRole = roleRepository.findByName(ERole.USER.toString()).orElseThrow(() -> new RuntimeException("Role not found"));
-        Role moderatorRole = roleRepository.findByName(ERole.MODERATOR.toString()).orElseThrow(() -> new RuntimeException("Role not found"));
-        Role adminRole = roleRepository.findByName(ERole.ADMIN.toString()).orElseThrow(() -> new RuntimeException("Role not found"));
+        userRole = roleRepository.findByNameIgnoreCase(ERole.User.getName())
+                .orElseThrow(() -> new RuntimeException("Role not found " + ERole.User.getName()));
+
+        Role moderatorRole = roleRepository.findByNameIgnoreCase(ERole.Moderator.getName())
+                .orElseThrow(() -> new RuntimeException("Role not found " + ERole.Moderator.getName()));
+
+        Role adminRole = roleRepository.findByNameIgnoreCase(ERole.Admin.getName())
+                .orElseThrow(() -> new RuntimeException("Role not found " + ERole.Admin.getName()));
 
         userHeaders.setBearerAuth(createUserAndLogin("user@user.com", userRole));
         moderatorHeaders.setBearerAuth(createUserAndLogin("moderator@moderator.com", moderatorRole));

@@ -1,4 +1,4 @@
-package com.example.moviemetricsv2.api.request;
+package com.example.moviemetricsv2.api.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.*;

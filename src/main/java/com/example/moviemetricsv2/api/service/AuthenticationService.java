@@ -28,13 +28,13 @@ public class AuthenticationService {
     private final PasswordEncoder passwordEncoder;
 
     public AuthenticationResponse register(RegisterRequest registerRequest) throws DataConflictException {
-        Optional<User> found = userRepository.findByEmail(registerRequest.getEmail());
+        if (userRepository.existsByEmailIgnoreCase(registerRequest.getEmail()))
+            throw DataConflictException.emailTaken(registerRequest.getEmail());
 
-        if (found.isPresent()) throw DataConflictException.emailTaken(registerRequest.getEmail());
+        Optional<Role> userRole = roleRepository.findByNameIgnoreCase(ERole.User.getName());
 
-        Optional<Role> userRole = roleRepository.findByName(ERole.USER.toString());
         if (userRole.isEmpty())
-            throw new InternalServerException("Role " + ERole.USER + " not found");
+            throw new InternalServerException("Role " + ERole.User.getName() + " not found");
 
         User user =  userRepository.save(
                 User.builder()
@@ -49,7 +49,7 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) throws NotFoundException {
-        Optional<User> user = userRepository.findByEmail(authenticationRequest.getEmail());
+        Optional<User> user = userRepository.findByEmailIgnoreCase(authenticationRequest.getEmail());
 
         if (user.isEmpty() || !passwordEncoder.matches(authenticationRequest.getPassword(), user.get().getPassword()))
             return AuthenticationResponse.builder().message("Invalid credentials").build();

@@ -6,8 +6,9 @@ import com.example.moviemetricsv2.api.model.Role;
 import com.example.moviemetricsv2.api.model.User;
 import com.example.moviemetricsv2.api.repository.IRoleRepository;
 import com.example.moviemetricsv2.api.repository.IUserRepository;
-import com.example.moviemetricsv2.api.request.UserDto;
+import com.example.moviemetricsv2.api.dto.UserDto;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,40 +23,30 @@ public class UserService implements IObjectService<User, UserDto>{
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User create(UserDto userDto) throws DataConflictException, NotFoundException {
-        Optional<User> taken = userRepository.findByEmail(userDto.getEmail());
-
-        if (taken.isPresent()) throw DataConflictException.emailTaken(userDto.getEmail());
-
-        Optional<Role> role = roleRepository.findByName(userDto.getRole());
-
-        if (role.isEmpty()) throw NotFoundException.roleNotFound(userDto.getRole());
+    public User create(UserDto userDto) {
+        if (userRepository.existsByEmailIgnoreCase(userDto.getEmail()))
+            throw DataConflictException.emailTaken(userDto.getEmail());
 
         return userRepository.save(
-                User.builder()
-                .email(userDto.getEmail())
-                .password(userDto.getIsPasswordEncrypted()?
-                        userDto.getPassword() :
-                        passwordEncoder.encode(userDto.getPassword())
-                )
-                .role(role.get())
-                .build()
+                new User(userDto, roleRepository, passwordEncoder)
         );
     }
 
     @Override
-    public User get(Long id) {
-    Optional<User> found = userRepository.findById(id);
+    public User get(Long id) throws NotFoundException {
+        Optional<User> found = userRepository.findById(id);
 
-        if (found.isEmpty()) throw NotFoundException.userNotFoundById(id);
+        if (found.isEmpty())
+            throw NotFoundException.userNotFoundById(id);
 
         return found.get();
     }
 
     public User getByEmail(String email) {
-        Optional<User> found = userRepository.findByEmail(email);
+        Optional<User> found = userRepository.findByEmailIgnoreCase(email);
 
-        if (found.isEmpty()) throw NotFoundException.userNotFoundByEmail(email);
+        if (found.isEmpty())
+            throw NotFoundException.userNotFoundByEmail(email);
 
         return found.get();
 
@@ -67,37 +58,25 @@ public class UserService implements IObjectService<User, UserDto>{
     }
 
     @Override
-    public User update(Long id, UserDto userDto) {
-        Optional<User> found = userRepository.findById(id);
+    public User update(Long id, UserDto userDto) throws DataConflictException, NotFoundException {
+        if (!userRepository.existsById(id))
+            throw NotFoundException.userNotFoundById(id);
 
-        if (found.isEmpty()) throw NotFoundException.userNotFoundById(id);
+        if (userRepository.existsByEmailIgnoreCase(userDto.getEmail()))
+            throw DataConflictException.emailTaken(userDto.getEmail());
 
-        Optional<User> taken = userRepository.findByEmail(userDto.getEmail());
+        User user = new User(userDto, roleRepository, passwordEncoder);
+        user.setId(id);
 
-        if (taken.isPresent()) throw DataConflictException.emailTaken(userDto.getEmail());
-
-        Optional<Role> role = roleRepository.findByName(userDto.getRole());
-
-        if (role.isEmpty()) throw NotFoundException.roleNotFound(userDto.getRole());
-
-        return userRepository.save(
-                User.builder()
-                        .id(id)
-                        .email(userDto.getEmail())
-                        .password(userDto.getIsPasswordEncrypted()?
-                                userDto.getPassword() :
-                                passwordEncoder.encode(userDto.getPassword())
-                        )
-                        .role(role.get())
-                        .build()
-        );
+        return userRepository.save(user);
     }
 
     @Override
-    public User delete(Long id) {
+    public User delete(Long id) throws NotFoundException {
         Optional<User> found = userRepository.findById(id);
 
-        if (found.isEmpty()) throw NotFoundException.userNotFoundById(id);
+        if (found.isEmpty())
+            throw NotFoundException.userNotFoundById(id);
 
         userRepository.deleteById(id);
 
