@@ -1,6 +1,5 @@
 package com.example.moviemetricsv2.api.service;
 
-import com.example.moviemetricsv2.api.model.MovieClassification;
 import com.example.moviemetricsv2.api.model.Permission;
 import com.example.moviemetricsv2.api.repository.IPermissionRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,18 +16,18 @@ public class PermissionService {
         Optional<Permission> permission = permissionRepository.findByNameIgnoreCase(name);
 
         return permission.orElseGet(() -> permissionRepository.save(
-            Permission.builder()
-                    .name(name)
-                    .build()
+                Permission.builder()
+                        .name(name)
+                        .build()
         ));
     }
 
     public void createIfNotFound(String name) {
         if (!permissionRepository.existsByNameIgnoreCase(name))
             permissionRepository.save(
-                Permission.builder()
-                        .name(name)
-                        .build()
+                    Permission.builder()
+                            .name(name)
+                            .build()
             );
     }
 }

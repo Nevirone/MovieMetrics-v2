@@ -15,8 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
-import java.util.HashSet;
 import java.util.Optional;
 
 @Service
@@ -36,7 +34,7 @@ public class AuthenticationService {
         if (userRole.isEmpty())
             throw new InternalServerException("Role " + ERole.User.getName() + " not found");
 
-        User user =  userRepository.save(
+        User user = userRepository.save(
                 User.builder()
                         .email(registerRequest.getEmail())
                         .password(passwordEncoder.encode(registerRequest.getPassword()))

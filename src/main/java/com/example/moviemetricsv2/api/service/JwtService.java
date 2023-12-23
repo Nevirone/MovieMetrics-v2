@@ -20,6 +20,7 @@ public class JwtService {
     public String generateToken(UserDetails userDetails) {
         return generateToken(new HashMap<>(), userDetails);
     }
+
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         SecretKey key = Keys.hmacShaKeyFor(secret.getBytes());
 
@@ -38,6 +39,7 @@ public class JwtService {
 
         return userName.equals(userDetails.getUsername());
     }
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
@@ -47,6 +49,7 @@ public class JwtService {
 
         return claimsResolver.apply(claims);
     }
+
     private Claims parseToken(String token) {
         SecretKey key = Keys.hmacShaKeyFor(secret.getBytes());
 

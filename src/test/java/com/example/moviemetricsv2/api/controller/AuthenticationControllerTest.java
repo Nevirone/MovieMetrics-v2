@@ -50,16 +50,19 @@ public class AuthenticationControllerTest {
     ObjectMapper objectMapper = new ObjectMapper();
 
     final TestRestTemplate restTemplate = new TestRestTemplate();
+
     private String getURL(String uri) {
         return "http://localhost:" + port + uri;
     }
+
     private Role userRole;
 
     @BeforeAll
     public void setup() {
         userRole = roleRepository.findByNameIgnoreCase(ERole.User.getName())
-                .orElseThrow(() -> NotFoundException.roleNotFoundByName(ERole.User.getName()));
+                .orElseThrow(() -> new NotFoundException("Role with name " + ERole.User.getName() + " not found"));
     }
+
     @BeforeEach
     public void cleanUp() {
         userRepository.deleteAll();

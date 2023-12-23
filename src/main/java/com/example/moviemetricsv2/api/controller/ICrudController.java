@@ -12,6 +12,8 @@ public interface ICrudController<T, TDto> {
     ResponseEntity<T> get(Long id) throws NotFoundException;
 
     ResponseEntity<List<T>> getAll();
-    ResponseEntity<T> update(Long id, TDto dto) throws  DataConflictException, NotFoundException;
+
+    ResponseEntity<T> update(Long id, TDto dto) throws DataConflictException, NotFoundException;
+
     ResponseEntity<T> delete(Long id) throws NotFoundException;
 }

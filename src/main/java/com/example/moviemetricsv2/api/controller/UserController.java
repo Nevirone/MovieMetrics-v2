@@ -1,9 +1,9 @@
 package com.example.moviemetricsv2.api.controller;
 
+import com.example.moviemetricsv2.api.dto.UserDto;
 import com.example.moviemetricsv2.api.exception.DataConflictException;
 import com.example.moviemetricsv2.api.exception.NotFoundException;
 import com.example.moviemetricsv2.api.model.User;
-import com.example.moviemetricsv2.api.dto.UserDto;
 import com.example.moviemetricsv2.api.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

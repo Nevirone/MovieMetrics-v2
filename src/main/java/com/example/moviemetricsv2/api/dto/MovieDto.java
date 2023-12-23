@@ -1,7 +1,6 @@
 package com.example.moviemetricsv2.api.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -20,6 +19,6 @@ public class MovieDto {
     @Size(min = 10, message = "Description must be at least 10 characters long")
     private String description;
 
-    @NotNull(message = "Classification must be provided")
-    private Long classification;
+    @NotNull(message = "Classification Id must be provided")
+    private Long classificationId;
 }

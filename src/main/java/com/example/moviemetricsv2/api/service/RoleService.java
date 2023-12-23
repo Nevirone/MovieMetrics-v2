@@ -28,10 +28,10 @@ public class RoleService {
     public void createIfNotFound(String name, List<Permission> permissions) {
         if (!roleRepository.existsByNameIgnoreCase(name))
             roleRepository.save(
-                Role.builder()
-                    .name(name)
-                    .permissions(permissions)
-                    .build()
+                    Role.builder()
+                            .name(name)
+                            .permissions(permissions)
+                            .build()
             );
     }
 }

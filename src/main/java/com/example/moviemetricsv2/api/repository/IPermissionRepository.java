@@ -7,5 +7,6 @@ import java.util.Optional;
 
 public interface IPermissionRepository extends JpaRepository<Permission, Long> {
     Optional<Permission> findByNameIgnoreCase(String name);
+
     boolean existsByNameIgnoreCase(String name);
 }

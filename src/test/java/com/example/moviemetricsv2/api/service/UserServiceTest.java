@@ -1,5 +1,6 @@
 package com.example.moviemetricsv2.api.service;
 
+import com.example.moviemetricsv2.api.dto.UserDto;
 import com.example.moviemetricsv2.api.exception.DataConflictException;
 import com.example.moviemetricsv2.api.exception.NotFoundException;
 import com.example.moviemetricsv2.api.model.ERole;
@@ -7,7 +8,6 @@ import com.example.moviemetricsv2.api.model.Role;
 import com.example.moviemetricsv2.api.model.User;
 import com.example.moviemetricsv2.api.repository.IRoleRepository;
 import com.example.moviemetricsv2.api.repository.IUserRepository;
-import com.example.moviemetricsv2.api.dto.UserDto;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,15 +38,16 @@ class UserServiceTest {
 
     private UserService userService;
 
-    private User createUser(String email) {
+    private User createUser() {
         return User.builder()
-                .email(email)
+                .email("test@test.com")
                 .password("TestPassword1")
                 .role(
-                    Role.builder()
-                        .name(ERole.User.getName())
-                        .permissions(new ArrayList<>())
-                        .build()
+                        Role.builder()
+                                .id(1L)
+                                .name(ERole.User.getName())
+                                .permissions(new ArrayList<>())
+                                .build()
                 )
                 .build();
     }
@@ -56,9 +57,10 @@ class UserServiceTest {
                 .email("test@test.com")
                 .password("TestPassword1")
                 .isPasswordEncrypted(true)
-                .role(ERole.User.getName())
+                .roleId(1L)
                 .build();
     }
+
     @BeforeEach
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
@@ -76,8 +78,16 @@ class UserServiceTest {
         // given
         UserDto userDto = createUserDto();
 
-        given(roleRepository.findByNameIgnoreCase(userDto.getRole()))
-                .willReturn(Optional.of(Role.builder().build()));
+        given(userRepository.existsByEmailIgnoreCase(userDto.getEmail()))
+                .willReturn(false);
+
+        given(roleRepository.findById(userDto.getRoleId()))
+                .willReturn(Optional.of(
+                        Role.builder()
+                                .id(userDto.getRoleId())
+                                .name(ERole.User.getName())
+                                .build()
+                ));
 
         // when
         userService.create(userDto);
@@ -105,7 +115,7 @@ class UserServiceTest {
         // then
         assertThatThrownBy(() -> userService.create(userDto))
                 .isInstanceOf(DataConflictException.class)
-                .hasMessageContaining("Email " + userDto.getEmail() + " is taken");
+                .hasMessageContaining(DataConflictException.emailTaken(userDto.getEmail()).getMessage());
     }
 
     @Test
@@ -114,17 +124,17 @@ class UserServiceTest {
         // given
         UserDto userDto = createUserDto();
 
-        given(userRepository.findByEmailIgnoreCase(userDto.getEmail()))
-                .willReturn(Optional.empty());
+        given(userRepository.existsByEmailIgnoreCase(userDto.getEmail()))
+                .willReturn(false);
 
-        given(roleRepository.findByNameIgnoreCase(userDto.getRole()))
+        given(roleRepository.findById(userDto.getRoleId()))
                 .willReturn(Optional.empty());
 
         // when
         // then
         assertThatThrownBy(() -> userService.create(userDto))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessageContaining("Role with name " + userDto.getRole() + " not found");
+                .hasMessageContaining(NotFoundException.roleNotFoundById(userDto.getRoleId()).getMessage());
     }
 
     @Test
@@ -133,7 +143,7 @@ class UserServiceTest {
         // given
         Long id = 2L;
         Optional<User> userOptional = Optional.of(
-                createUser("test@test.com")
+                createUser()
         );
 
         given(userRepository.findById(id))
@@ -159,7 +169,7 @@ class UserServiceTest {
         // then
         assertThatThrownBy(() -> userService.get(id))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessageContaining("User with id " + id + " not found");
+                .hasMessageContaining(NotFoundException.userNotFoundById(id).getMessage());
     }
 
     @Test
@@ -167,7 +177,7 @@ class UserServiceTest {
     void canGetUserByEmail() {
         // given
         Optional<User> userOptional = Optional.of(
-                createUser("test@test.com")
+                createUser()
         );
 
         given(userRepository.findByEmailIgnoreCase(userOptional.get().getEmail()))
@@ -193,7 +203,7 @@ class UserServiceTest {
         // then
         assertThatThrownBy(() -> userService.getByEmail(email))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessageContaining("User with email " + email + " not found");
+                .hasMessageContaining(NotFoundException.userNotFoundByEmail(email).getMessage());
     }
 
     @Test
@@ -219,8 +229,12 @@ class UserServiceTest {
         given(userRepository.findByEmailIgnoreCase(userDto.getEmail()))
                 .willReturn(Optional.empty());
 
-        given(roleRepository.findByNameIgnoreCase(userDto.getRole()))
-                .willReturn(Optional.of(Role.builder().build()));
+        given(roleRepository.findById(userDto.getRoleId())).willReturn(Optional.of(
+                Role.builder()
+                        .id(userDto.getRoleId())
+                        .name(ERole.User.getName())
+                        .build()
+        ));
 
         // when
         userService.update(id, userDto);
@@ -252,7 +266,7 @@ class UserServiceTest {
         // then
         assertThatThrownBy(() -> userService.update(id, userDto))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessageContaining("User with id " + id + " not found");
+                .hasMessageContaining(NotFoundException.userNotFoundById(id).getMessage());
     }
 
     @Test
@@ -272,7 +286,7 @@ class UserServiceTest {
         // then
         assertThatThrownBy(() -> userService.update(id, userDto))
                 .isInstanceOf(DataConflictException.class)
-                .hasMessageContaining("Email " + userDto.getEmail() + " is taken");
+                .hasMessageContaining(DataConflictException.emailTaken(userDto.getEmail()).getMessage());
     }
 
     @Test
@@ -285,17 +299,17 @@ class UserServiceTest {
         given(userRepository.existsById(2L))
                 .willReturn(true);
 
-        given(userRepository.findByEmailIgnoreCase(userDto.getEmail()))
-                .willReturn(Optional.empty());
+        given(userRepository.existsByEmailIgnoreCase(userDto.getEmail()))
+                .willReturn(false);
 
-        given(roleRepository.findByNameIgnoreCase(userDto.getRole()))
+        given(roleRepository.findById(userDto.getRoleId()))
                 .willReturn(Optional.empty());
 
         // when
         // then
         assertThatThrownBy(() -> userService.update(id, userDto))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessageContaining("Role with name " + userDto.getRole() + " not found");
+                .hasMessageContaining(NotFoundException.roleNotFoundById(userDto.getRoleId()).getMessage());
     }
 
     @Test
@@ -327,6 +341,6 @@ class UserServiceTest {
         // then
         assertThatThrownBy(() -> userService.delete(id))
                 .isInstanceOf(NotFoundException.class)
-                .hasMessageContaining("User with id " + id + " not found");
+                .hasMessageContaining(NotFoundException.userNotFoundById(id).getMessage());
     }
 }

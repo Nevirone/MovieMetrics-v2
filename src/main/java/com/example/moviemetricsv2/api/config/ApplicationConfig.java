@@ -46,9 +46,8 @@ public class ApplicationConfig {
     }
 
 
-
     @Bean
-    public AccessDeniedHandler accessDeniedHandler(){
+    public AccessDeniedHandler accessDeniedHandler() {
         return ((request, response, accessDeniedException) -> {
             response.setStatus(HttpStatus.FORBIDDEN.value());
             response.getWriter().write("Access denied");
@@ -56,7 +55,7 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint(){
+    public AuthenticationEntryPoint authenticationEntryPoint() {
         return ((request, response, accessDeniedException) -> {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
         });

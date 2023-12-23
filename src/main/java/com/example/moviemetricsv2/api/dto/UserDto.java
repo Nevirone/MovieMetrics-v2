@@ -1,9 +1,13 @@
 package com.example.moviemetricsv2.api.dto;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
-@Getter @Setter
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
@@ -18,6 +22,6 @@ public class UserDto {
     @NotNull(message = "IsPasswordEncrypted must be specified")
     private Boolean isPasswordEncrypted;
 
-    @NotBlank(message = "Role cannot be empty")
-    private String role;
+    @NotNull(message = "Role Id cannot be empty")
+    private Long roleId;
 }

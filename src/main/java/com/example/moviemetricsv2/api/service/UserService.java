@@ -1,14 +1,13 @@
 package com.example.moviemetricsv2.api.service;
 
+import com.example.moviemetricsv2.api.dto.UserDto;
 import com.example.moviemetricsv2.api.exception.DataConflictException;
 import com.example.moviemetricsv2.api.exception.NotFoundException;
 import com.example.moviemetricsv2.api.model.Role;
 import com.example.moviemetricsv2.api.model.User;
 import com.example.moviemetricsv2.api.repository.IRoleRepository;
 import com.example.moviemetricsv2.api.repository.IUserRepository;
-import com.example.moviemetricsv2.api.dto.UserDto;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +16,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements IObjectService<User, UserDto>{
+public class UserService implements IObjectService<User, UserDto> {
     private final IUserRepository userRepository;
     private final IRoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -27,8 +26,19 @@ public class UserService implements IObjectService<User, UserDto>{
         if (userRepository.existsByEmailIgnoreCase(userDto.getEmail()))
             throw DataConflictException.emailTaken(userDto.getEmail());
 
+        Role role = roleRepository.findById(userDto.getRoleId())
+                .orElseThrow(() -> NotFoundException.roleNotFoundById(userDto.getRoleId()));
+
         return userRepository.save(
-                new User(userDto, roleRepository, passwordEncoder)
+                User.builder()
+                        .email(userDto.getEmail())
+                        .password(
+                                userDto.getIsPasswordEncrypted() ?
+                                        userDto.getPassword() :
+                                        passwordEncoder.encode(userDto.getPassword())
+                        )
+                        .role(role)
+                        .build()
         );
     }
 
@@ -65,10 +75,21 @@ public class UserService implements IObjectService<User, UserDto>{
         if (userRepository.existsByEmailIgnoreCase(userDto.getEmail()))
             throw DataConflictException.emailTaken(userDto.getEmail());
 
-        User user = new User(userDto, roleRepository, passwordEncoder);
-        user.setId(id);
+        Role role = roleRepository.findById(userDto.getRoleId())
+                .orElseThrow(() -> NotFoundException.roleNotFoundById(userDto.getRoleId()));
 
-        return userRepository.save(user);
+        return userRepository.save(
+                User.builder()
+                        .id(id)
+                        .email(userDto.getEmail())
+                        .password(
+                                userDto.getIsPasswordEncrypted() ?
+                                        userDto.getPassword() :
+                                        passwordEncoder.encode(userDto.getPassword())
+                        )
+                        .role(role)
+                        .build()
+        );
     }
 
     @Override

@@ -19,12 +19,14 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MovieController extends BaseController implements ICrudController<Movie, MovieDto> {
     private final MovieService movieService;
+
     @Override
     @PreAuthorize("hasAuthority('CREATE_MOVIES')")
     @PostMapping
     public ResponseEntity<Movie> create(@Valid @RequestBody MovieDto movieDto) throws DataConflictException {
         return ResponseEntity.status(HttpStatus.CREATED).body(movieService.create(movieDto));
     }
+
     @Override
     @PreAuthorize("hasAuthority('DISPLAY_MOVIES')")
     @GetMapping("/{id}")

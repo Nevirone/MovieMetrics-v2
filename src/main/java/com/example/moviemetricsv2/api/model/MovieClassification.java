@@ -1,8 +1,6 @@
 package com.example.moviemetricsv2.api.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -22,7 +20,6 @@ public class MovieClassification {
 
     private String name;
 
-    @JsonIgnore
     @JsonBackReference
     @OneToMany(mappedBy = "classification")
     private Set<Movie> movies;

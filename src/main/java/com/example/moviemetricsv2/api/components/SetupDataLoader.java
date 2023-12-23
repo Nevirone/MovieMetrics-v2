@@ -12,7 +12,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -26,6 +29,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private final MovieClassificationService movieClassificationService;
 
     boolean alreadySetup = false;
+
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (alreadySetup) return;
@@ -50,7 +54,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
         moderatorPrivileges.add(privileges.get(EPermission.DisplayMovies));
         moderatorPrivileges.add(privileges.get(EPermission.CreateMovies));
-        moderatorPrivileges.add(privileges.get(EPermission.UpdateUsers));
+        moderatorPrivileges.add(privileges.get(EPermission.UpdateMovies));
         moderatorPrivileges.add(privileges.get(EPermission.DeleteMovies));
 
         moderatorPrivileges.add(privileges.get(EPermission.DisplayUsers));

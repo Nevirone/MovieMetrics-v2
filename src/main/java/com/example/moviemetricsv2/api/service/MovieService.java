@@ -4,12 +4,10 @@ import com.example.moviemetricsv2.api.dto.MovieDto;
 import com.example.moviemetricsv2.api.exception.DataConflictException;
 import com.example.moviemetricsv2.api.exception.NotFoundException;
 import com.example.moviemetricsv2.api.model.Movie;
-import com.example.moviemetricsv2.api.model.Role;
-import com.example.moviemetricsv2.api.model.User;
+import com.example.moviemetricsv2.api.model.MovieClassification;
 import com.example.moviemetricsv2.api.repository.IMovieClassificationRepository;
 import com.example.moviemetricsv2.api.repository.IMovieRepository;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,8 +24,15 @@ public class MovieService implements IObjectService<Movie, MovieDto> {
         if (movieRepository.existsByTitleIgnoreCase(movieDto.getTitle()))
             throw DataConflictException.titleTaken(movieDto.getTitle());
 
+        MovieClassification movieClassification = movieClassificationRepository.findById(movieDto.getClassificationId())
+                .orElseThrow(() -> NotFoundException.movieClassificationNotFoundById(movieDto.getClassificationId()));
+
         return movieRepository.save(
-                new Movie(movieDto, movieClassificationRepository)
+                Movie.builder()
+                        .title(movieDto.getTitle())
+                        .description(movieDto.getDescription())
+                        .classification(movieClassification)
+                        .build()
         );
     }
 
@@ -35,6 +40,11 @@ public class MovieService implements IObjectService<Movie, MovieDto> {
     public Movie get(Long id) throws NotFoundException {
         return movieRepository.findById(id)
                 .orElseThrow(() -> NotFoundException.movieNotFoundById(id));
+    }
+
+    public Movie getByTitle(String title) throws NotFoundException {
+        return movieRepository.findByTitleIgnoreCase(title)
+                .orElseThrow(() -> NotFoundException.movieNotFoundByTitle(title));
     }
 
     @Override
@@ -50,10 +60,17 @@ public class MovieService implements IObjectService<Movie, MovieDto> {
         if (movieRepository.existsByTitleIgnoreCase(movieDto.getTitle()))
             throw DataConflictException.titleTaken(movieDto.getTitle());
 
-        Movie movie = new Movie(movieDto, movieClassificationRepository);
-        movie.setId(id);
+        MovieClassification movieClassification = movieClassificationRepository.findById(movieDto.getClassificationId())
+                .orElseThrow(() -> NotFoundException.movieClassificationNotFoundById(movieDto.getClassificationId()));
 
-        return movieRepository.save(movie);
+        return movieRepository.save(
+                Movie.builder()
+                        .id(id)
+                        .title(movieDto.getTitle())
+                        .description(movieDto.getDescription())
+                        .classification(movieClassification)
+                        .build()
+        );
     }
 
     @Override

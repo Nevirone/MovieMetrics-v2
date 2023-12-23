@@ -25,9 +25,9 @@ public class MovieClassificationService {
     public void createIfNotFound(String name) {
         if (!movieClassificationRepository.existsByNameIgnoreCase(name))
             movieClassificationRepository.save(
-                MovieClassification.builder()
-                        .name(name)
-                        .build()
+                    MovieClassification.builder()
+                            .name(name)
+                            .build()
             );
     }
 }

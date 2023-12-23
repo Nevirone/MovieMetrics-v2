@@ -1,13 +1,13 @@
 package com.example.moviemetricsv2.api.controller;
 
 import com.example.moviemetricsv2.MovieMetricsV2Application;
+import com.example.moviemetricsv2.api.dto.UserDto;
 import com.example.moviemetricsv2.api.model.ERole;
 import com.example.moviemetricsv2.api.model.Role;
 import com.example.moviemetricsv2.api.model.User;
 import com.example.moviemetricsv2.api.repository.IRoleRepository;
 import com.example.moviemetricsv2.api.repository.IUserRepository;
 import com.example.moviemetricsv2.api.request.AuthenticationRequest;
-import com.example.moviemetricsv2.api.dto.UserDto;
 import com.example.moviemetricsv2.api.response.AuthenticationResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -50,6 +50,7 @@ public class UserControllerTest {
     private String getURL(String uri) {
         return "http://localhost:" + port + uri;
     }
+
     private Role userRole;
 
     private final HttpHeaders userHeaders = new HttpHeaders();
@@ -71,7 +72,7 @@ public class UserControllerTest {
                 .email(email)
                 .password(password)
                 .isPasswordEncrypted(true)
-                .role("USER")
+                .roleId(1L)
                 .build();
     }
 
@@ -101,6 +102,7 @@ public class UserControllerTest {
 
         return authenticationResponse.getToken();
     }
+
     @BeforeAll
     public void setup() throws JsonProcessingException {
         userRole = roleRepository.findByNameIgnoreCase(ERole.User.getName())
@@ -120,7 +122,7 @@ public class UserControllerTest {
     @BeforeEach
     public void cleanUp() {
         List<User> users = userRepository.findAll();
-        for(User user : users)
+        for (User user : users)
             if (!List.of("user@user.com", "moderator@moderator.com", "admin@admin.com").contains(user.getEmail()))
                 userRepository.delete(user);
     }
@@ -207,7 +209,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("Create User: Email Taken")
-    public void testPostUserTakenTitle() {
+    public void testPostUserTakenEmail() {
         // given
         UserDto userDto = createUserDto("test@test.com", "TestPassword1");
 
@@ -357,7 +359,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("Update User: Email Taken")
-    public void testPatchUserTakenTitle() {
+    public void testPatchUserTakenEmail() {
         // given
         UserDto userDto = createUserDto("test@test.com", "TestPassword1");
 
@@ -446,7 +448,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("Get User: Successful role Admin")
-    public void testGetUserById() throws JsonProcessingException{
+    public void testGetUserById() throws JsonProcessingException {
         // given
         User saved = createUser("test@test.com");
 
@@ -469,7 +471,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("Get User: Successful role Moderator")
-    public void testGetUserByIdWithRoleModerator() throws JsonProcessingException{
+    public void testGetUserByIdWithRoleModerator() throws JsonProcessingException {
         // given
         User saved = createUser("test@test.com");
 
@@ -648,7 +650,7 @@ public class UserControllerTest {
 
     @Test
     @DisplayName("Get All Users: Successful")
-    public void testGetUsers() throws JsonProcessingException{
+    public void testGetUsers() throws JsonProcessingException {
         // given
         createUser("test1@test.com");
         createUser("test2@test.com");
@@ -666,14 +668,15 @@ public class UserControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
 
-        List<User> users = objectMapper.readValue(response.getBody(), new TypeReference<>() {});
+        List<User> users = objectMapper.readValue(response.getBody(), new TypeReference<>() {
+        });
 
         assertThat(users.size()).isEqualTo(6); // 3 created and 3 for testing permissions
     }
 
     @Test
     @DisplayName("Get All Users: Successful role Moderator")
-    public void testGetUsersWithRoleModerator() throws JsonProcessingException{
+    public void testGetUsersWithRoleModerator() throws JsonProcessingException {
         // given
         createUser("test1@test.com");
         createUser("test2@test.com");
@@ -691,7 +694,8 @@ public class UserControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
 
-        List<User> users = objectMapper.readValue(response.getBody(), new TypeReference<>() {});
+        List<User> users = objectMapper.readValue(response.getBody(), new TypeReference<>() {
+        });
 
         assertThat(users.size()).isEqualTo(6); // 3 created and 3 for testing permissions
     }

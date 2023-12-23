@@ -1,6 +1,6 @@
 package com.example.moviemetricsv2.api.exception;
 
-public class NotFoundException extends RuntimeException{
+public class NotFoundException extends RuntimeException {
     public NotFoundException(String message) {
         super(message);
     }
@@ -13,15 +13,27 @@ public class NotFoundException extends RuntimeException{
         return new NotFoundException("User with email " + email + " not found");
     }
 
+    public static NotFoundException roleNotFoundById(Long id) {
+        return new NotFoundException("Role with id " + id + " not found");
+    }
+
     public static NotFoundException roleNotFoundByName(String name) {
         return new NotFoundException("Role with name " + name + " not found");
     }
 
-    public static RuntimeException movieClassificationNotFoundById(Long id) {
+    public static NotFoundException movieClassificationNotFoundById(Long id) {
         return new NotFoundException("Movie classification with id " + id + " not found");
     }
 
-    public static RuntimeException movieNotFoundById(Long id) {
+    public static NotFoundException movieClassificationNotFoundByName(String name) {
+        return new NotFoundException("Movie classification with name " + name + " not found");
+    }
+
+    public static NotFoundException movieNotFoundById(Long id) {
         return new NotFoundException("Movie with id " + id + " not found");
+    }
+
+    public static NotFoundException movieNotFoundByTitle(String title) {
+        return new NotFoundException("Movie with title " + title + " not found");
     }
 }
