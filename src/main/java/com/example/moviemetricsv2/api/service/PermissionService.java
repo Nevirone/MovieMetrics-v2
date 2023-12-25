@@ -13,6 +13,7 @@ public class PermissionService {
     private final IPermissionRepository permissionRepository;
 
     public Permission findOrCreate(String name) {
+        // todo shorten
         Optional<Permission> permission = permissionRepository.findByNameIgnoreCase(name);
 
         return permission.orElseGet(() -> permissionRepository.save(

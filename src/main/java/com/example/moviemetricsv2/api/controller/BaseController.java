@@ -3,6 +3,7 @@ package com.example.moviemetricsv2.api.controller;
 import com.example.moviemetricsv2.api.exception.DataConflictException;
 import com.example.moviemetricsv2.api.exception.InternalServerException;
 import com.example.moviemetricsv2.api.exception.NotFoundException;
+import com.example.moviemetricsv2.api.exception.PermissionException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -15,26 +16,6 @@ import java.util.Map;
 
 public class BaseController {
 
-    @ExceptionHandler(DataConflictException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<String> handleDataConflictException(DataConflictException ex) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(NotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<String> handleNotFoundException(NotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(InternalServerException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<String> handleInternalServerException(InternalServerException ex) {
-        System.out.println(Arrays.toString(ex.getStackTrace()));
-        System.out.println(ex.getMessage());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
@@ -46,5 +27,31 @@ public class BaseController {
         });
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors.toString());
+    }
+
+    @ExceptionHandler(PermissionException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<String> handlePermissionException(PermissionException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<String> handleNotFoundException(NotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(DataConflictException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ResponseEntity<String> handleDataConflictException(DataConflictException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(InternalServerException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ResponseEntity<String> handleInternalServerException(InternalServerException ex) {
+        System.out.println(Arrays.toString(ex.getStackTrace()));
+        System.out.println(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }

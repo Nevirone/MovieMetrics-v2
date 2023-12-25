@@ -15,6 +15,7 @@ public class RoleService {
     private final IRoleRepository roleRepository;
 
     public Role findOrCreate(String name, List<Permission> permissions) {
+        // todo shorten
         Optional<Role> role = roleRepository.findByNameIgnoreCase(name);
 
         return role.orElseGet(() -> roleRepository.save(

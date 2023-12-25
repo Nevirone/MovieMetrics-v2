@@ -29,6 +29,7 @@ public class AuthenticationService {
         if (userRepository.existsByEmailIgnoreCase(registerRequest.getEmail()))
             throw DataConflictException.emailTaken(registerRequest.getEmail());
 
+        // todo move to existById and getReferenceById
         Optional<Role> userRole = roleRepository.findByNameIgnoreCase(ERole.User.getName());
 
         if (userRole.isEmpty())

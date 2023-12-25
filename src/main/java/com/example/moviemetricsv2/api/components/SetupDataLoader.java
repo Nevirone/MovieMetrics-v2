@@ -47,6 +47,11 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         List<Permission> userPrivileges = new ArrayList<>();
 
         userPrivileges.add(privileges.get(EPermission.DisplayMovies));
+        userPrivileges.add(privileges.get(EPermission.DisplayReviews));
+        userPrivileges.add(privileges.get(EPermission.CreateReviews));
+        userPrivileges.add(privileges.get(EPermission.UpdateOwnReviews));
+        userPrivileges.add(privileges.get(EPermission.DeleteOwnReviews));
+
 
         roleService.createIfNotFound(ERole.User.getName(), userPrivileges);
 
@@ -57,18 +62,28 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         moderatorPrivileges.add(privileges.get(EPermission.UpdateMovies));
         moderatorPrivileges.add(privileges.get(EPermission.DeleteMovies));
 
+        moderatorPrivileges.add(privileges.get(EPermission.DisplayReviews));
+        moderatorPrivileges.add(privileges.get(EPermission.CreateReviews));
+        moderatorPrivileges.add(privileges.get(EPermission.UpdateReviews));
+        moderatorPrivileges.add(privileges.get(EPermission.DeleteReviews));
+        
+        userPrivileges.add(privileges.get(EPermission.UpdateOwnReviews));
+        userPrivileges.add(privileges.get(EPermission.DeleteOwnReviews));
+
         moderatorPrivileges.add(privileges.get(EPermission.DisplayUsers));
 
         roleService.createIfNotFound(ERole.Moderator.getName(), moderatorPrivileges);
 
         Role adminRole = roleService.findOrCreate(ERole.Admin.getName(), privileges.values().stream().toList());
 
-        userRepository.save(
-                User.builder()
-                        .email(environment.getProperty("root.root_access"))
-                        .password(encoder.encode(environment.getProperty("root.root_password")))
-                        .role(adminRole)
-                        .build()
-        );
+        if (!userRepository.existsByEmailIgnoreCase(environment.getProperty("root.root_access"))) {
+            userRepository.save(
+                    User.builder()
+                            .email(environment.getProperty("root.root_access"))
+                            .password(encoder.encode(environment.getProperty("root.root_password")))
+                            .role(adminRole)
+                            .build()
+            );
+        }
     }
 }

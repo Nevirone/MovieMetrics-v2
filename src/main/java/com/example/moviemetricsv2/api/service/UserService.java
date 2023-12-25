@@ -26,6 +26,7 @@ public class UserService implements IObjectService<User, UserDto> {
         if (userRepository.existsByEmailIgnoreCase(userDto.getEmail()))
             throw DataConflictException.emailTaken(userDto.getEmail());
 
+        // todo move to existById and getReferenceById
         Role role = roleRepository.findById(userDto.getRoleId())
                 .orElseThrow(() -> NotFoundException.roleNotFoundById(userDto.getRoleId()));
 
@@ -75,6 +76,7 @@ public class UserService implements IObjectService<User, UserDto> {
         if (userRepository.existsByEmailIgnoreCase(userDto.getEmail()))
             throw DataConflictException.emailTaken(userDto.getEmail());
 
+        // todo move to existById and getReferenceById
         Role role = roleRepository.findById(userDto.getRoleId())
                 .orElseThrow(() -> NotFoundException.roleNotFoundById(userDto.getRoleId()));
 

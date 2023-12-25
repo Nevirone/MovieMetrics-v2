@@ -1,0 +1,2548 @@
+{
+	"info": {
+		"_postman_id": "7bb5caef-fd00-4851-8f73-219b8143ab9a",
+		"name": "Movie Metrics",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31364811"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"item": [
+						{
+							"name": "Register user K.Nowak",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"kamil.nowak@gmail.com\",\r\n    \"password\": \"KamilNowak1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080{{route}}",
+									"host": [
+										"localhost"
+									],
+									"port": "8080{{route}}"
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register user A.Nowak",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"adam.nowak@gmail.com\",\r\n    \"password\": \"AdamNowak1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080{{route}}",
+									"host": [
+										"localhost"
+									],
+									"port": "8080{{route}}"
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register user  D.Kowalski",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"dariusz.kowalski@gmail.com\",\r\n    \"password\": \"DariuszKowalski1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080{{route}}",
+									"host": [
+										"localhost"
+									],
+									"port": "8080{{route}}"
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register user P.Kowal",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"var responseBody = pm.response.text();\r",
+											"\r",
+											"if (responseBody) {\r",
+											"    pm.collectionVariables.set('token', responseBody);\r",
+											"    console.log('Token successfully extracted:', responseBody);\r",
+											"}\r",
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"piotr.kowal@gmail.com\",\r\n    \"password\": \"PiotrKowal1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080{{route}}",
+									"host": [
+										"localhost"
+									],
+									"port": "8080{{route}}"
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.collectionVariables.set(\"route\", \"/auth/register\")"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"item": [
+						{
+							"name": "Login user K.Nowak",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"kamil.nowak@gmail.com\",\r\n    \"password\": \"KamilNowak1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080{{route}}",
+									"host": [
+										"localhost"
+									],
+									"port": "8080{{route}}"
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login user A.Nowak",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"adam.nowak@gmail.com\",\r\n    \"password\": \"AdamNowak1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080{{route}}",
+									"host": [
+										"localhost"
+									],
+									"port": "8080{{route}}"
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login user  D.Kowalski",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"dariusz.kowalski@gmail.com\",\r\n    \"password\": \"DariuszKowalski1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080{{route}}",
+									"host": [
+										"localhost"
+									],
+									"port": "8080{{route}}"
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login user P.Kowal",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"piotr.kowal@gmail.com\",\r\n    \"password\": \"PiotrKowal1\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080{{route}}",
+									"host": [
+										"localhost"
+									],
+									"port": "8080{{route}}"
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login as root access",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"email\": \"root@root.com\",\r\n    \"password\": \"pass\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:8080{{route}}",
+									"host": [
+										"localhost"
+									],
+									"port": "8080{{route}}"
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.collectionVariables.set(\"route\", \"/auth/login\")"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var responseBody = pm.response.json();",
+							"if(responseBody.token) {",
+							"    pm.collectionVariables.set('token', responseBody.token);",
+							"    console.log('Token successfully extracted:', responseBody.token);",
+							"}",
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Authenticated Requests",
+			"item": [
+				{
+					"name": "Users",
+					"item": [
+						{
+							"name": "Post",
+							"item": [
+								{
+									"name": "Add user K.Nowak",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"kamil.nowak@gmail.com\",\r\n    \"password\": \"KamilNowak1\",\r\n    \"isPasswordEncrypted\": true,\r\n    \"role\": \"USER\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add user K.Nowak as moderator",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"kamil.nowak@gmail.com\",\r\n    \"password\": \"KamilNowak1\",\r\n    \"isPasswordEncrypted\": true,\r\n    \"role\": \"MODERATOR\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add user K.Nowak as admin",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"kamil.nowak@gmail.com\",\r\n    \"password\": \"KamilNowak1\",\r\n    \"isPasswordEncrypted\": true,\r\n    \"role\": \"ADMIN\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add user A.Nowak",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"adam.nowak@gmail.com\",\r\n    \"password\": \"AdamNowak1\",\r\n    \"isPasswordEncrypted\": true,\r\n    \"role\": \"USER\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add user A.Nowak as moderator",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"adam.nowak@gmail.com\",\r\n    \"password\": \"AdamNowak1\",\r\n    \"isPasswordEncrypted\": true,\r\n    \"role\": \"MODERATOR\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add user A.Nowak as admin",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"exec": [
+													""
+												],
+												"type": "text/javascript"
+											}
+										}
+									],
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"adam.nowak@gmail.com\",\r\n    \"password\": \"AdamNowak1\",\r\n    \"isPasswordEncrypted\": true,\r\n    \"role\": \"ADMIN\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Get",
+							"item": [
+								{
+									"name": "All users",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Users #1",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Users #2",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Users #3",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/3",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"3"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Users #4",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/4",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"4"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Patch",
+							"item": [
+								{
+									"name": "Patch user #1",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"\",\r\n    \"password\": \"\",\r\n    \"isPasswordEncrypted\": false,\r\n    \"role\": \"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch user #2",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"\",\r\n    \"password\": \"\",\r\n    \"isPasswordEncrypted\": false,\r\n    \"role\": \"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch user #3",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"\",\r\n    \"password\": \"\",\r\n    \"isPasswordEncrypted\": false,\r\n    \"role\": \"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/3",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"3"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch user #4",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"email\": \"\",\r\n    \"password\": \"\",\r\n    \"isPasswordEncrypted\": false,\r\n    \"role\": \"\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/4",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"4"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Delete",
+							"item": [
+								{
+									"name": "Users #1",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Users #2",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Users #3",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/3",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"3"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Users #4",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/4",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"4"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.collectionVariables.set(\"route\", \"/api/users\")"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Classifications",
+					"item": [
+						{
+							"name": "Get all",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:8080{{route}}",
+									"host": [
+										"localhost"
+									],
+									"port": "8080{{route}}"
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.collectionVariables.set(\"route\", \"/api/classifications\")"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Movies",
+					"item": [
+						{
+							"name": "Post",
+							"item": [
+								{
+									"name": "Add #1",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"Saw II\",\r\n    \"description\": \"Cool horror movie with traps\",\r\n    \"classificationId\": 2\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add #2",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"Thor\",\r\n    \"description\": \"Story about guy with sparky fingers\",\r\n    \"classificationId\": 2\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add #3",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"Home Alone\",\r\n    \"description\": \"Most overwatched movie ever\",\r\n    \"classificationId\": 2\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add #4",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"Alien\",\r\n    \"description\": \"Movie about some weird hobos\",\r\n    \"classificationId\": 2\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Patch",
+							"item": [
+								{
+									"name": "Patch #1",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"Saw II\",\r\n    \"description\": \"Cool horror movie with traps\",\r\n    \"classificationId\": 2\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch #2",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"Thor\",\r\n    \"description\": \"Story about guy with sparky fingers\",\r\n    \"classificationId\": 2\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch #3",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"Home Alone\",\r\n    \"description\": \"Most overwatched movie ever\",\r\n    \"classificationId\": 2\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/3",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"3"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch #4",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"title\": \"Alien\",\r\n    \"description\": \"Movie about some weird hobos\",\r\n    \"classificationId\": 2\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/4",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"4"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Get",
+							"item": [
+								{
+									"name": "Get all",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get #1",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get #2",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get #3",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/3",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"3"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get #4",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/4",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"4"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Delete",
+							"item": [
+								{
+									"name": "Delete #1",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete #2",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete #3",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/3",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"3"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete #4",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/4",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"4"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.collectionVariables.set(\"route\", \"/api/movies\")"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Reviews",
+					"item": [
+						{
+							"name": "Post",
+							"item": [
+								{
+									"name": "Add review #1",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 1,\r\n    \"score\": 3\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add review #2",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 2,\r\n    \"score\": 5\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add review #3",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 3,\r\n    \"score\": 2\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add review #4",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 4,\r\n    \"score\": 1\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add review #1 with content",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 1,\r\n    \"score\": 3,\r\n    \"content\": \"That was a great watch. Absolutely recomended\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add review #2 with content",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 2,\r\n    \"score\": 5,\r\n    \"content\": \"That was a great watch. Absolutely recomended\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add review #3 with content",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 3,\r\n    \"score\": 2,\r\n    \"content\": \"That was a great watch. Absolutely recomended\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Add review #4 with content",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 4,\r\n    \"score\": 1,\r\n    \"content\": \"That was a great watch. Absolutely recomended\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Get",
+							"item": [
+								{
+									"name": "From movie",
+									"item": [
+										{
+											"name": "Get of movie #1",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "localhost:8080{{route}}/of/1",
+													"host": [
+														"localhost"
+													],
+													"port": "8080{{route}}",
+													"path": [
+														"of",
+														"1"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Get of movie #2",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "localhost:8080{{route}}/of/2",
+													"host": [
+														"localhost"
+													],
+													"port": "8080{{route}}",
+													"path": [
+														"of",
+														"2"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Get of movie #3",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "localhost:8080{{route}}/of/3",
+													"host": [
+														"localhost"
+													],
+													"port": "8080{{route}}",
+													"path": [
+														"of",
+														"3"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Get of movie #4",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "localhost:8080{{route}}/of/4",
+													"host": [
+														"localhost"
+													],
+													"port": "8080{{route}}",
+													"path": [
+														"of",
+														"4"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "From user",
+									"item": [
+										{
+											"name": "Get from user #1",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "localhost:8080{{route}}/from/1",
+													"host": [
+														"localhost"
+													],
+													"port": "8080{{route}}",
+													"path": [
+														"from",
+														"1"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Get from user #2",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "localhost:8080{{route}}/from/2",
+													"host": [
+														"localhost"
+													],
+													"port": "8080{{route}}",
+													"path": [
+														"from",
+														"2"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Get from user #3",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "localhost:8080{{route}}/from/3",
+													"host": [
+														"localhost"
+													],
+													"port": "8080{{route}}",
+													"path": [
+														"from",
+														"3"
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "Get from user #4",
+											"request": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "localhost:8080{{route}}/from/4",
+													"host": [
+														"localhost"
+													],
+													"port": "8080{{route}}",
+													"path": [
+														"from",
+														"4"
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "Get all",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}"
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get all mine",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/own",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"own"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get #1",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get #2",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get #3",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/3",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"3"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Get #4",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/4",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"4"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Patch",
+							"item": [
+								{
+									"name": "Patch review #1",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 1,\r\n    \"score\": 3\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch review #2",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 1,\r\n    \"score\": 5\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch review #3",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 1,\r\n    \"score\": 2\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/3",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"3"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch review #4",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 1,\r\n    \"score\": 1\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/4",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"4"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch review #1 with content",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 1,\r\n    \"score\": 3,\r\n    \"content\": \"That was a great watch. Absolutely recomended\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch review #2 with content",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 1,\r\n    \"score\": 5,\r\n    \"content\": \"That was a great watch. Absolutely recomended\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch review #3 with content",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 1,\r\n    \"score\": 2,\r\n    \"content\": \"That was a great watch. Absolutely recomended\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/3",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"3"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch review #4 with content",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 1,\r\n    \"score\": 1,\r\n    \"content\": \"That was a great watch. Absolutely recomended\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/4",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"4"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Patch Own",
+							"item": [
+								{
+									"name": "Patch review #1",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 1,\r\n    \"score\": 3\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/own/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"own",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch review #2",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 1,\r\n    \"score\": 5\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/own/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"own",
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch review #3",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 1,\r\n    \"score\": 2\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/own/3",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"own",
+												"3"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch review #4",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 1,\r\n    \"score\": 1\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/own/4",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"own",
+												"4"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch review #1 with content",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 1,\r\n    \"score\": 3,\r\n    \"content\": \"That was a great watch. Absolutely recomended\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/own/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"own",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch review #2 with content",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 1,\r\n    \"score\": 5,\r\n    \"content\": \"That was a great watch. Absolutely recomended\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/own/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"own",
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch review #3 with content",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 1,\r\n    \"score\": 2,\r\n    \"content\": \"That was a great watch. Absolutely recomended\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/own/3",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"own",
+												"3"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Patch review #4 with content",
+									"request": {
+										"method": "PATCH",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"movieId\": 1,\r\n    \"score\": 1,\r\n    \"content\": \"That was a great watch. Absolutely recomended\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "localhost:8080{{route}}/own/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"own",
+												"1"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Delete",
+							"item": [
+								{
+									"name": "Delete #1",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete #2",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete #3",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/3",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"3"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete #4",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/4",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"4"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Delete Own",
+							"item": [
+								{
+									"name": "Delete #1",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/own/1",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"own",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete #2",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/own/2",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"own",
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete #3",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/own/3",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"own",
+												"3"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Delete #4",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "localhost:8080{{route}}/own/4",
+											"host": [
+												"localhost"
+											],
+											"port": "8080{{route}}",
+											"path": [
+												"own",
+												"4"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.collectionVariables.set(\"route\", \"/api/reviews\")"
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "route",
+			"value": ""
+		}
+	]
+}

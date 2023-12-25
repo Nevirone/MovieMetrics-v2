@@ -24,6 +24,7 @@ public class MovieService implements IObjectService<Movie, MovieDto> {
         if (movieRepository.existsByTitleIgnoreCase(movieDto.getTitle()))
             throw DataConflictException.titleTaken(movieDto.getTitle());
 
+        // todo move to existById and getReferenceById
         MovieClassification movieClassification = movieClassificationRepository.findById(movieDto.getClassificationId())
                 .orElseThrow(() -> NotFoundException.movieClassificationNotFoundById(movieDto.getClassificationId()));
 
@@ -60,6 +61,7 @@ public class MovieService implements IObjectService<Movie, MovieDto> {
         if (movieRepository.existsByTitleIgnoreCase(movieDto.getTitle()))
             throw DataConflictException.titleTaken(movieDto.getTitle());
 
+        // todo move to existById and getReferenceById
         MovieClassification movieClassification = movieClassificationRepository.findById(movieDto.getClassificationId())
                 .orElseThrow(() -> NotFoundException.movieClassificationNotFoundById(movieDto.getClassificationId()));
 

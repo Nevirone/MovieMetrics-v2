@@ -13,7 +13,13 @@ public enum EPermission {
     DisplayMovies("DISPLAY_MOVIES"),
     CreateMovies("CREATE_MOVIES"),
     UpdateMovies("UPDATE_MOVIES"),
-    DeleteMovies("DELETE_MOVIES");
+    DeleteMovies("DELETE_MOVIES"),
+    DisplayReviews("DISPLAY_REVIEWS"),
+    CreateReviews("CREATE_REVIEWS"),
+    UpdateReviews("UPDATE_REVIEWS"),
+    DeleteReviews("DELETE_REVIEWS"),
+    UpdateOwnReviews("UPDATE_OWN_REVIEWS"),
+    DeleteOwnReviews("DELETE_OWN_REVIEWS");
 
     private final String name;
 }

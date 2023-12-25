@@ -1,7 +1,10 @@
 package com.example.moviemetricsv2.api.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,4 +25,7 @@ public class Movie {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "movie_classification_id", nullable = false)
     private MovieClassification classification;
+
+    @OneToMany(mappedBy = "movie")
+    private List<Review> reviews;
 }
