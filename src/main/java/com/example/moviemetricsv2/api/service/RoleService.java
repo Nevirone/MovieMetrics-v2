@@ -14,22 +14,25 @@ import java.util.Optional;
 public class RoleService {
     private final IRoleRepository roleRepository;
 
-    public Role findOrCreate(String name, List<Permission> permissions) {
-        // todo shorten
-        Optional<Role> role = roleRepository.findByNameIgnoreCase(name);
+    public List<Role> getAll() {
+        return roleRepository.findAll();
+    }
 
-        return role.orElseGet(() -> roleRepository.save(
+    public Role findOrCreate(Long id, String name, List<Permission> permissions) {
+        return roleRepository.findByNameIgnoreCase(name).orElseGet(() -> roleRepository.save(
                 Role.builder()
+                        .id(id)
                         .name(name)
                         .permissions(permissions)
                         .build()
         ));
     }
 
-    public void createIfNotFound(String name, List<Permission> permissions) {
+    public void createIfNotFound(Long id, String name, List<Permission> permissions) {
         if (!roleRepository.existsByNameIgnoreCase(name))
             roleRepository.save(
                     Role.builder()
+                            .id(id)
                             .name(name)
                             .permissions(permissions)
                             .build()

@@ -17,4 +17,8 @@ public class DataConflictException extends RuntimeException {
     public static DataConflictException titleTaken(String title) {
         return new DataConflictException("Title " + title + " is taken");
     }
+
+    public static DataConflictException reviewExists(Long userId, Long movieId) {
+        return new DataConflictException("Review from user with id " + userId + " of movie with id " + movieId + " already exists");
+    }
 }

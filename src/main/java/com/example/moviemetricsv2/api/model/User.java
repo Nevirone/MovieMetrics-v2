@@ -23,6 +23,7 @@ public class User implements UserDetails {
     private Long id;
 
     @Email
+    @Column(length = 64)
     private String email;
 
     private String password;

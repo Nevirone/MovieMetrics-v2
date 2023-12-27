@@ -36,4 +36,12 @@ public class NotFoundException extends RuntimeException {
     public static NotFoundException movieNotFoundByTitle(String title) {
         return new NotFoundException("Movie with title " + title + " not found");
     }
+
+    public static NotFoundException reviewNotFoundById(Long id) {
+        return new NotFoundException("Review with id " + id + " not found");
+    }
+
+    public static NotFoundException genreNotFoundById(Long id) {
+        return new NotFoundException("Genre with id " + id + " not found");
+    }
 }

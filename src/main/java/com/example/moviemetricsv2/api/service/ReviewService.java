@@ -13,7 +13,9 @@ import com.example.moviemetricsv2.api.model.User;
 import com.example.moviemetricsv2.api.repository.IMovieRepository;
 import com.example.moviemetricsv2.api.repository.IReviewRepository;
 import com.example.moviemetricsv2.api.repository.IUserRepository;
+import com.example.moviemetricsv2.api.response.ReviewResponse;
 import lombok.RequiredArgsConstructor;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -24,105 +26,101 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ReviewService implements IObjectService<Review, ReviewDto>{
+public class ReviewService implements IObjectService<Review, ReviewDto, ReviewResponse>{
     private final IReviewRepository reviewRepository;
     private final IMovieRepository movieRepository;
     private final IUserRepository userRepository;
 
-    public Review create(ReviewDto reviewDto) throws DataConflictException {
+    public ReviewResponse create(ReviewDto reviewDto) throws DataConflictException {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        if (reviewRepository.existsByMovieIdAndAuthorId(reviewDto.getMovieId(), user.getId()))
-            throw new DataConflictException("Review already exists"); // todo move to DataConflictException func
 
         if (!movieRepository.existsById(reviewDto.getMovieId()))
             throw NotFoundException.movieNotFoundById(reviewDto.getMovieId());
 
-        return reviewRepository.save(Review.builder()
+        if (reviewRepository.existsByMovieIdAndAuthorId(reviewDto.getMovieId(), user.getId()))
+            throw DataConflictException.reviewExists(user.getId(), reviewDto.getMovieId());
+
+
+        Review created = reviewRepository.save(Review.builder()
                 .movie(movieRepository.getReferenceById(reviewDto.getMovieId()))
                 .author(user)
                 .score(reviewDto.getScore())
                 .content(reviewDto.getContent())
                 .build()
         );
+        return new ReviewResponse(created);
     }
 
-    public Review get(Long id) throws NotFoundException {
-        return reviewRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Review with id " + id + " not found")); // todo move to NotFoundException func
+    public ReviewResponse get(Long id) throws NotFoundException {
+        Review found = reviewRepository.findById(id)
+                .orElseThrow(() -> NotFoundException.reviewNotFoundById(id));
+        return new ReviewResponse(found);
     }
 
-    public List<Review> getAll() {
-        return reviewRepository.findAll();
+    public List<ReviewResponse> getAll() {
+        return reviewRepository.findAll().stream().map(ReviewResponse::new).toList();
     }
 
-    public List<Review> getAllOfMovie(Long movieId) {
-        return reviewRepository.findAllByMovieId(movieId);
+    public List<ReviewResponse> getAllOfMovie(Long movieId) throws NotFoundException {
+        if (!movieRepository.existsById(movieId))
+            throw NotFoundException.movieNotFoundById(movieId);
+
+        return reviewRepository.findAllByMovieId(movieId).stream().map(ReviewResponse::new).toList();
     }
-    public List<Review> getAllOfUser(Long userId) {
-        return reviewRepository.findAllByAuthorId(userId);
+    public List<ReviewResponse> getAllOfUser(Long userId) throws NotFoundException {
+        if (!userRepository.existsById(userId))
+            throw NotFoundException.userNotFoundById(userId);
+
+        return reviewRepository.findAllByAuthorId(userId).stream().map(ReviewResponse::new).toList();
     }
 
-    public Review updateOwn(Long id, ReviewDto reviewDto) throws DataConflictException, NotFoundException, PermissionException {
+    public ReviewResponse updateOwn(Long id, ReviewDto reviewDto) throws NotFoundException, PermissionException {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<Review> found = reviewRepository.findById(id);
 
-        if (found.isEmpty())
-            throw new NotFoundException("Review with id " + id + " not found"); // todo move to NotFoundException func
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> NotFoundException.reviewNotFoundById(id));
 
-        if (!Objects.equals(found.get().getAuthor().getId(), user.getId()))
-            throw new PermissionException("You are not the owner");
+        if (!review.getAuthor().getId().equals(user.getId()))
+            throw new PermissionException("You are not the author");
 
-        return reviewRepository.save(
-                Review.builder()
-                        .movie(movieRepository.getReferenceById(found.get().getMovie().getId()))
-                        .author(user)
-                        .score(reviewDto.getScore())
-                        .content(reviewDto.getContent())
-                        .build()
-        );
+        review.setScore(reviewDto.getScore());
+        review.setContent(reviewDto.getContent());
+
+        Review saved = reviewRepository.save(review);
+        return new ReviewResponse(saved);
     }
 
-    public Review update(Long id, ReviewDto reviewDto) throws DataConflictException, NotFoundException {
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<Review> found = reviewRepository.findById(id);
+    public ReviewResponse update(Long id, ReviewDto reviewDto) throws NotFoundException {
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> NotFoundException.reviewNotFoundById(id));
 
-        if (found.isEmpty())
-            throw new NotFoundException("Review with id " + id + " not found"); // todo move to NotFoundException func
+        review.setScore(reviewDto.getScore());
+        review.setContent(reviewDto.getContent());
 
-        return reviewRepository.save(
-                Review.builder()
-                        .movie(movieRepository.getReferenceById(found.get().getMovie().getId()))
-                        .author(user)
-                        .score(reviewDto.getScore())
-                        .content(reviewDto.getContent())
-                        .build()
-        );
+        Review updated = reviewRepository.save(review);
+        return new ReviewResponse(updated);
     }
 
-    public Review deleteOwn(Long id) throws NotFoundException, PermissionException {
+    public ReviewResponse deleteOwn(Long id) throws NotFoundException, PermissionException {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Optional<Review> found = reviewRepository.findById(id);
 
-        if (found.isEmpty())
-            throw new NotFoundException("Review with id " + id + " not found"); // todo move to NotFoundException func
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> NotFoundException.reviewNotFoundById(id));
 
-        if (!Objects.equals(found.get().getAuthor().getId(), user.getId()))
-            throw new PermissionException("You are not the owner");
+        if (!review.getAuthor().getId().equals(user.getId()))
+            throw new PermissionException("You are not the author");
 
         reviewRepository.deleteById(id);
 
-        return found.get();
+        return new ReviewResponse(review);
     }
 
-    public Review delete(Long id) throws NotFoundException {
-        Optional<Review> found = reviewRepository.findById(id);
-
-        if (found.isEmpty())
-            throw new NotFoundException("Review with id " + id + " not found"); // todo move to NotFoundException func
+    public ReviewResponse delete(Long id) throws NotFoundException {
+        Review found = reviewRepository.findById(id)
+                .orElseThrow(() -> NotFoundException.reviewNotFoundById(id));
 
         reviewRepository.deleteById(id);
 
-        return found.get();
+        return new ReviewResponse(found);
     }
 }

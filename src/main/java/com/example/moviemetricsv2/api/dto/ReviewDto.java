@@ -9,7 +9,6 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
 public class ReviewDto {
-    @NotNull(message = "Movie Id must be provided")
     private Long movieId;
 
     @NotNull(message = "Score cannot be empty")

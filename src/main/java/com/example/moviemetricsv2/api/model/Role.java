@@ -15,9 +15,9 @@ import java.util.List;
 @Table(name = "roles")
 public class Role {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(length = 16)
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER)

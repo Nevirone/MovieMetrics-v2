@@ -6,14 +6,14 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface ICrudController<T, TDto> {
-    ResponseEntity<T> create(TDto dto) throws DataConflictException;
+public interface ICrudController<T, TDto, TResponse> {
+    ResponseEntity<TResponse> create(TDto dto) throws DataConflictException;
 
-    ResponseEntity<T> get(Long id) throws NotFoundException;
+    ResponseEntity<TResponse> get(Long id) throws NotFoundException;
 
-    ResponseEntity<List<T>> getAll();
+    ResponseEntity<List<TResponse>> getAll();
 
-    ResponseEntity<T> update(Long id, TDto dto) throws DataConflictException, NotFoundException;
+    ResponseEntity<TResponse> update(Long id, TDto dto) throws DataConflictException, NotFoundException;
 
-    ResponseEntity<T> delete(Long id) throws NotFoundException;
+    ResponseEntity<TResponse> delete(Long id) throws NotFoundException;
 }

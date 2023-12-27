@@ -4,6 +4,7 @@ import com.example.moviemetricsv2.api.dto.UserDto;
 import com.example.moviemetricsv2.api.exception.DataConflictException;
 import com.example.moviemetricsv2.api.exception.NotFoundException;
 import com.example.moviemetricsv2.api.model.User;
+import com.example.moviemetricsv2.api.response.UserResponse;
 import com.example.moviemetricsv2.api.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,13 +18,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-public class UserController extends BaseController implements ICrudController<User, UserDto> {
+public class UserController extends BaseController implements ICrudController<User, UserDto, UserResponse> {
     private final UserService userService;
 
     @Override
     @PreAuthorize("hasAuthority('CREATE_USERS')")
     @PostMapping
-    public ResponseEntity<User> create(@Valid @RequestBody UserDto userDto)
+    public ResponseEntity<UserResponse> create(@Valid @RequestBody UserDto userDto)
             throws DataConflictException {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userDto));
     }
@@ -31,14 +32,14 @@ public class UserController extends BaseController implements ICrudController<Us
     @Override
     @PreAuthorize("hasAuthority('DISPLAY_USERS')")
     @GetMapping
-    public ResponseEntity<List<User>> getAll() {
+    public ResponseEntity<List<UserResponse>> getAll() {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getAll());
     }
 
     @Override
     @PreAuthorize("hasAuthority('DISPLAY_USERS')")
     @GetMapping("/{id}")
-    public ResponseEntity<User> get(@PathVariable Long id)
+    public ResponseEntity<UserResponse> get(@PathVariable Long id)
             throws NotFoundException {
         return ResponseEntity.status(HttpStatus.OK).body(userService.get(id));
     }
@@ -46,7 +47,7 @@ public class UserController extends BaseController implements ICrudController<Us
     @Override
     @PreAuthorize("hasAuthority('UPDATE_USERS')")
     @PatchMapping("/{id}")
-    public ResponseEntity<User> update(@PathVariable Long id, @Valid @RequestBody UserDto userDto)
+    public ResponseEntity<UserResponse> update(@PathVariable Long id, @Valid @RequestBody UserDto userDto)
             throws NotFoundException, DataConflictException {
         return ResponseEntity.status(HttpStatus.OK).body(userService.update(id, userDto));
     }
@@ -54,7 +55,7 @@ public class UserController extends BaseController implements ICrudController<Us
     @Override
     @PreAuthorize("hasAuthority('DELETE_USERS')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<User> delete(@PathVariable Long id)
+    public ResponseEntity<UserResponse> delete(@PathVariable Long id)
             throws NotFoundException {
         return ResponseEntity.status(HttpStatus.OK).body(userService.delete(id));
     }

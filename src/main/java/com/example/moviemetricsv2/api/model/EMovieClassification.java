@@ -6,11 +6,12 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum EMovieClassification {
-    GeneralAudience("G"),
-    ParentalGuideline("PG"),
-    ParentsStronglyCautioned("PG-13"),
-    Restricted("R"),
-    ClearlyAdult("NC-17");
+    GeneralAudience("General Audience", "G"),
+    ParentalGuideline("Parental Guidance Suggested", "PG"),
+    ParentsStronglyCautioned("Parents Strongly Cautioned", "PG-13"),
+    Restricted("Restricted", "R"),
+    ClearlyAdult("Clearly Adult", "NC-17");
 
     private final String name;
+    private final String brief;
 }

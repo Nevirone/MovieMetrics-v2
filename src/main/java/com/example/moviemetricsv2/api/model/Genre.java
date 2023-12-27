@@ -12,8 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Builder
-@Table(name = "permissions")
-public class Permission {
+@Table(name = "genres")
+public class Genre {
     @Id
     private Long id;
 
@@ -21,6 +21,6 @@ public class Permission {
     private String name;
 
     @JsonBackReference
-    @ManyToMany(mappedBy = "permissions")
-    private List<Role> roles;
+    @ManyToMany(mappedBy = "genres")
+    private List<Movie> movies;
 }

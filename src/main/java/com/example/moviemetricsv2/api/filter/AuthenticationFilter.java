@@ -64,7 +64,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             }
         } catch (UsernameNotFoundException ex) {
             response.setStatus(HttpStatus.SC_UNAUTHORIZED);
-            response.getWriter().write("Invalid token");
             return;
         } catch (ExpiredJwtException ex) {
             response.setStatus(HttpStatus.SC_UNAUTHORIZED);

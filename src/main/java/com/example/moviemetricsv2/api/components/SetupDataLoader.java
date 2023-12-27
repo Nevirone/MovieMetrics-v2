@@ -2,6 +2,7 @@ package com.example.moviemetricsv2.api.components;
 
 import com.example.moviemetricsv2.api.model.*;
 import com.example.moviemetricsv2.api.repository.IUserRepository;
+import com.example.moviemetricsv2.api.service.GenreService;
 import com.example.moviemetricsv2.api.service.MovieClassificationService;
 import com.example.moviemetricsv2.api.service.PermissionService;
 import com.example.moviemetricsv2.api.service.RoleService;
@@ -25,6 +26,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private final IUserRepository userRepository;
     private final PasswordEncoder encoder;
     private final PermissionService permissionService;
+    private final GenreService genreService;
     private final RoleService roleService;
     private final MovieClassificationService movieClassificationService;
 
@@ -36,12 +38,27 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
         Map<EPermission, Permission> privileges = new HashMap<>();
 
-        for (EMovieClassification eMovieClassification : EMovieClassification.values()) {
-            movieClassificationService.createIfNotFound(eMovieClassification.getName());
+        for (int i = 0; i < EMovieClassification.values().length; i++) {
+            movieClassificationService.createIfNotFound(
+                    (long) (i + 1),
+                    EMovieClassification.values()[i].getName(),
+                    EMovieClassification.values()[i].getBrief()
+            );
         }
 
-        for (EPermission ePermission : EPermission.values()) {
-            privileges.put(ePermission, permissionService.findOrCreate(ePermission.getName()));
+        for (int i = 0; i < EPermission.values().length; i ++) {
+            privileges.put(EPermission.values()[i],
+                    permissionService.findOrCreate(
+                            (long) (i+1),
+                            EPermission.values()[i].getName()
+                    ));
+        }
+
+        for (int i = 0; i < EGenre.values().length; i++) {
+            genreService.createIfNotFound(
+                    (long) (i + 1),
+                    EGenre.values()[i].getName()
+            );
         }
 
         List<Permission> userPrivileges = new ArrayList<>();
@@ -52,8 +69,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         userPrivileges.add(privileges.get(EPermission.UpdateOwnReviews));
         userPrivileges.add(privileges.get(EPermission.DeleteOwnReviews));
 
-
-        roleService.createIfNotFound(ERole.User.getName(), userPrivileges);
+        roleService.createIfNotFound(1L, ERole.User.getName(), userPrivileges);
 
         List<Permission> moderatorPrivileges = new ArrayList<>();
 
@@ -72,9 +88,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
         moderatorPrivileges.add(privileges.get(EPermission.DisplayUsers));
 
-        roleService.createIfNotFound(ERole.Moderator.getName(), moderatorPrivileges);
+        roleService.createIfNotFound(2L, ERole.Moderator.getName(), moderatorPrivileges);
 
-        Role adminRole = roleService.findOrCreate(ERole.Admin.getName(), privileges.values().stream().toList());
+        Role adminRole = roleService.findOrCreate(3L, ERole.Admin.getName(), privileges.values().stream().toList());
 
         if (!userRepository.existsByEmailIgnoreCase(environment.getProperty("root.root_access"))) {
             userRepository.save(

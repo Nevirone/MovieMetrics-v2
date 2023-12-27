@@ -7,6 +7,7 @@ import com.example.moviemetricsv2.api.model.Role;
 import com.example.moviemetricsv2.api.model.User;
 import com.example.moviemetricsv2.api.repository.IRoleRepository;
 import com.example.moviemetricsv2.api.repository.IUserRepository;
+import com.example.moviemetricsv2.api.response.UserResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,21 +17,20 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements IObjectService<User, UserDto> {
+public class UserService implements IObjectService<User, UserDto, UserResponse> {
     private final IUserRepository userRepository;
     private final IRoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public User create(UserDto userDto) {
+    public UserResponse create(UserDto userDto) {
         if (userRepository.existsByEmailIgnoreCase(userDto.getEmail()))
             throw DataConflictException.emailTaken(userDto.getEmail());
 
-        // todo move to existById and getReferenceById
-        Role role = roleRepository.findById(userDto.getRoleId())
-                .orElseThrow(() -> NotFoundException.roleNotFoundById(userDto.getRoleId()));
+        if (!roleRepository.existsById(userDto.getRoleId()))
+            throw NotFoundException.roleNotFoundById(userDto.getRoleId());
 
-        return userRepository.save(
+        User created = userRepository.save(
                 User.builder()
                         .email(userDto.getEmail())
                         .password(
@@ -38,49 +38,47 @@ public class UserService implements IObjectService<User, UserDto> {
                                         userDto.getPassword() :
                                         passwordEncoder.encode(userDto.getPassword())
                         )
-                        .role(role)
+                        .role(roleRepository.getReferenceById(userDto.getRoleId()))
                         .build()
         );
+        return new UserResponse(created);
     }
 
     @Override
-    public User get(Long id) throws NotFoundException {
-        Optional<User> found = userRepository.findById(id);
+    public UserResponse get(Long id) throws NotFoundException {
+        User found = userRepository.findById(id)
+                .orElseThrow(() -> NotFoundException.userNotFoundById(id));
 
-        if (found.isEmpty())
-            throw NotFoundException.userNotFoundById(id);
-
-        return found.get();
+        return new UserResponse(found);
     }
 
-    public User getByEmail(String email) {
-        Optional<User> found = userRepository.findByEmailIgnoreCase(email);
+    public UserResponse getByEmail(String email) {
+        User found = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> NotFoundException.userNotFoundByEmail(email));
 
-        if (found.isEmpty())
-            throw NotFoundException.userNotFoundByEmail(email);
-
-        return found.get();
+        return new UserResponse(found);
 
     }
 
     @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public List<UserResponse> getAll() {
+        return userRepository.findAll().stream().map(UserResponse::new).toList();
     }
 
     @Override
-    public User update(Long id, UserDto userDto) throws DataConflictException, NotFoundException {
+    public UserResponse update(Long id, UserDto userDto) throws DataConflictException, NotFoundException {
         if (!userRepository.existsById(id))
             throw NotFoundException.userNotFoundById(id);
 
-        if (userRepository.existsByEmailIgnoreCase(userDto.getEmail()))
+        Optional<User> found = userRepository.findByEmailIgnoreCase(userDto.getEmail());
+
+        if (found.isPresent() && !found.get().getId().equals(id))
             throw DataConflictException.emailTaken(userDto.getEmail());
 
-        // todo move to existById and getReferenceById
-        Role role = roleRepository.findById(userDto.getRoleId())
-                .orElseThrow(() -> NotFoundException.roleNotFoundById(userDto.getRoleId()));
+        if (!roleRepository.existsById(userDto.getRoleId()))
+            throw NotFoundException.roleNotFoundById(userDto.getRoleId());
 
-        return userRepository.save(
+        User updated = userRepository.save(
                 User.builder()
                         .id(id)
                         .email(userDto.getEmail())
@@ -89,20 +87,19 @@ public class UserService implements IObjectService<User, UserDto> {
                                         userDto.getPassword() :
                                         passwordEncoder.encode(userDto.getPassword())
                         )
-                        .role(role)
+                        .role(roleRepository.getReferenceById(userDto.getRoleId()))
                         .build()
         );
+        return new UserResponse(updated);
     }
 
     @Override
-    public User delete(Long id) throws NotFoundException {
-        Optional<User> found = userRepository.findById(id);
-
-        if (found.isEmpty())
-            throw NotFoundException.userNotFoundById(id);
+    public UserResponse delete(Long id) throws NotFoundException {
+        User found = userRepository.findById(id)
+                .orElseThrow(() -> NotFoundException.userNotFoundById(id));
 
         userRepository.deleteById(id);
 
-        return found.get();
+        return new UserResponse(found);
     }
 }
