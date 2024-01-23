@@ -10,6 +10,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -44,7 +45,7 @@ class PermissionServiceTest {
                 .willReturn(Optional.of(Permission.builder().name(name).build()));
 
         // when
-        permissionService.findOrCreate(name);
+        permissionService.findOrCreate(1L, name);
 
         // then
         verify(permissionRepository).findByNameIgnoreCase(name);
@@ -59,7 +60,7 @@ class PermissionServiceTest {
                 .willReturn(Optional.empty());
 
         // when
-        permissionService.findOrCreate(name);
+        permissionService.findOrCreate(1L, name);
 
         // then
         ArgumentCaptor<Permission> permissionArgumentCaptor = ArgumentCaptor.forClass(Permission.class);
@@ -81,7 +82,7 @@ class PermissionServiceTest {
                 .willReturn(true);
 
         // when
-        permissionService.createIfNotFound(name);
+        permissionService.createIfNotFound(1L, name);
 
         // then
         verify(permissionRepository).existsByNameIgnoreCase(name);
@@ -96,7 +97,7 @@ class PermissionServiceTest {
                 .willReturn(false);
 
         // when
-        permissionService.createIfNotFound(name);
+        permissionService.createIfNotFound(1L, name);
 
         // then
         ArgumentCaptor<Permission> permissionArgumentCaptor = ArgumentCaptor.forClass(Permission.class);
@@ -107,5 +108,19 @@ class PermissionServiceTest {
         Permission capturedPermission = permissionArgumentCaptor.getValue();
 
         assertThat(capturedPermission.getName()).isEqualTo(name);
+    }
+
+    @Test
+    @DisplayName("Get All Permissions: Successful")
+    void getAllPermissions() {
+        // given
+        given(permissionRepository.findAll())
+                .willReturn(new ArrayList<>());
+
+        // when
+        permissionService.getAll();
+
+        // then
+        verify(permissionRepository).findAll();
     }
 }

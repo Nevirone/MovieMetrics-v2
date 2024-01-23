@@ -20,7 +20,7 @@ class IPermissionRepositoryTest {
     void testCanFindPermissionByName() {
         // given
         String name = "Delete_User";
-        Permission permission = Permission.builder().name(name).build();
+        Permission permission = Permission.builder().id(1L).name(name).build();
 
         permissionRepository.save(permission);
 
@@ -37,7 +37,7 @@ class IPermissionRepositoryTest {
     void testCanFindPermissionByNameCaseInsensitive() {
         // given
         String name = "DeLEte_USer";
-        Permission permission = Permission.builder().name(name.toLowerCase()).build();
+        Permission permission = Permission.builder().id(1L).name(name.toLowerCase()).build();
 
         permissionRepository.save(permission);
 
@@ -67,7 +67,7 @@ class IPermissionRepositoryTest {
     void testCanCheckNameExists() {
         // given
         String name = "Delete_User";
-        Permission permission = Permission.builder().name(name).build();
+        Permission permission = Permission.builder().id(1L).name(name).build();
 
         permissionRepository.save(permission);
 
@@ -81,7 +81,7 @@ class IPermissionRepositoryTest {
     void testCanCheckNameExistsCaseInsensitive() {
         // given
         String name = "DeLEte_USer";
-        Permission permission = Permission.builder().name(name.toLowerCase()).build();
+        Permission permission = Permission.builder().id(1L).name(name.toLowerCase()).build();
 
         permissionRepository.save(permission);
 

@@ -9,6 +9,7 @@ import com.example.moviemetricsv2.api.model.Movie;
 import com.example.moviemetricsv2.api.model.Review;
 import com.example.moviemetricsv2.api.model.User;
 import com.example.moviemetricsv2.api.response.ReviewResponse;
+import com.example.moviemetricsv2.api.response.UserResponse;
 import com.example.moviemetricsv2.api.service.MovieService;
 import com.example.moviemetricsv2.api.service.ReviewService;
 import jakarta.validation.Valid;
@@ -32,7 +33,7 @@ public class ReviewController extends BaseController {
     public ResponseEntity<ReviewResponse> create(@PathVariable Long movieId, @Valid @RequestBody ReviewDto reviewDto)
             throws DataConflictException {
         reviewDto.setMovieId(movieId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.create(reviewDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ReviewResponse(reviewService.create(reviewDto)));
     }
 
     @PreAuthorize("hasAuthority('DISPLAY_REVIEWS')")
@@ -40,44 +41,44 @@ public class ReviewController extends BaseController {
     public ResponseEntity<List<ReviewResponse>> getAllFromMe() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getAllOfUser(user.getId()));
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getAllOfUser(user.getId()).stream().map(ReviewResponse::new).toList());
     }
 
     @PreAuthorize("hasAuthority('DISPLAY_REVIEWS')")
     @GetMapping("/from/{userId}")
     public ResponseEntity<List<ReviewResponse>> getAllFromUser(@PathVariable Long userId) throws NotFoundException {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getAllOfUser(userId));
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getAllOfUser(userId).stream().map(ReviewResponse::new).toList());
     }
 
     @PreAuthorize("hasAuthority('DISPLAY_REVIEWS')")
     @GetMapping("/of/{movieId}")
     public ResponseEntity<List<ReviewResponse>> getAllOfMovie(@PathVariable Long movieId) throws NotFoundException {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getAllOfMovie(movieId));
+        return ResponseEntity.status(HttpStatus.OK).body(reviewService.getAllOfMovie(movieId).stream().map(ReviewResponse::new).toList());
     }
 
     @PreAuthorize("hasAuthority('UPDATE_OWN_REVIEWS')")
     @PatchMapping("/own/{id}")
     public ResponseEntity<ReviewResponse> updateOwn(@PathVariable Long id, @Valid @RequestBody ReviewDto reviewDto)
             throws NotFoundException, PermissionException {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.updateOwn(id, reviewDto));
+        return ResponseEntity.status(HttpStatus.OK).body(new ReviewResponse(reviewService.updateOwn(id, reviewDto)));
     }
 
     @PreAuthorize("hasAuthority('UPDATE_REVIEWS')")
     @PatchMapping("/{id}")
     public ResponseEntity<ReviewResponse> update(@PathVariable Long id, @Valid @RequestBody ReviewDto reviewDto)
             throws NotFoundException {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.update(id, reviewDto));
+        return ResponseEntity.status(HttpStatus.OK).body(new ReviewResponse(reviewService.update(id, reviewDto)));
     }
 
     @PreAuthorize("hasAuthority('DELETE_OWN_REVIEWS')")
     @DeleteMapping("/own/{id}")
     public ResponseEntity<ReviewResponse> deleteOwn(@PathVariable Long id) throws NotFoundException, PermissionException {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.deleteOwn(id));
+        return ResponseEntity.status(HttpStatus.OK).body(new ReviewResponse(reviewService.deleteOwn(id)));
     }
 
     @PreAuthorize("hasAuthority('DELETE_REVIEWS')")
     @DeleteMapping("/{id}")
     public ResponseEntity<ReviewResponse> delete(@PathVariable Long id) throws NotFoundException {
-        return ResponseEntity.status(HttpStatus.OK).body(reviewService.delete(id));
+        return ResponseEntity.status(HttpStatus.OK).body(new ReviewResponse(reviewService.delete(id)));
     }
 }

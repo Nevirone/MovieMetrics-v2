@@ -10,6 +10,7 @@ import com.example.moviemetricsv2.api.repository.IRoleRepository;
 import com.example.moviemetricsv2.api.repository.IUserRepository;
 import com.example.moviemetricsv2.api.request.AuthenticationRequest;
 import com.example.moviemetricsv2.api.response.AuthenticationResponse;
+import com.example.moviemetricsv2.api.response.MovieResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -25,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -69,6 +71,7 @@ public class MovieControllerTest {
                         .title(title)
                         .description("Test description")
                         .classification(movieClassification)
+                        .genres(new ArrayList<>())
                         .build()
         );
     }
@@ -78,6 +81,7 @@ public class MovieControllerTest {
                 .title(title)
                 .description("Test description")
                 .classificationId(movieClassification.getId())
+                .genreIds(new ArrayList<>())
                 .build();
     }
 
@@ -150,7 +154,7 @@ public class MovieControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.CREATED.value());
 
-        Movie movie = objectMapper.readValue(response.getBody(), Movie.class);
+        MovieResponse movie = objectMapper.readValue(response.getBody(), MovieResponse.class);
 
         assertThat(movie.getTitle()).isEqualTo(movieDto.getTitle());
     }
@@ -173,7 +177,7 @@ public class MovieControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.CREATED.value());
 
-        Movie movie = objectMapper.readValue(response.getBody(), Movie.class);
+        MovieResponse movie = objectMapper.readValue(response.getBody(), MovieResponse.class);
 
         assertThat(movie.getTitle()).isEqualTo(movieDto.getTitle());
     }
@@ -278,7 +282,7 @@ public class MovieControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
 
-        Movie movie = objectMapper.readValue(response.getBody(), Movie.class);
+        MovieResponse movie = objectMapper.readValue(response.getBody(), MovieResponse.class);
 
         assertThat(movie.getTitle()).isEqualTo(movieDto.getTitle());
     }
@@ -303,7 +307,7 @@ public class MovieControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
 
-        Movie movie = objectMapper.readValue(response.getBody(), Movie.class);
+        MovieResponse movie = objectMapper.readValue(response.getBody(), MovieResponse.class);
 
         assertThat(movie.getTitle()).isEqualTo(movieDto.getTitle());
     }
@@ -368,7 +372,7 @@ public class MovieControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
 
-        Movie movie = objectMapper.readValue(response.getBody(), Movie.class);
+        MovieResponse movie = objectMapper.readValue(response.getBody(), MovieResponse.class);
 
         assertThat(movie.getTitle()).isEqualTo(saved.getTitle());
     }
@@ -391,7 +395,7 @@ public class MovieControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
 
-        Movie movie = objectMapper.readValue(response.getBody(), Movie.class);
+        MovieResponse movie = objectMapper.readValue(response.getBody(), MovieResponse.class);
 
         assertThat(movie.getTitle()).isEqualTo(saved.getTitle());
     }
@@ -414,7 +418,7 @@ public class MovieControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
 
-        Movie movie = objectMapper.readValue(response.getBody(), Movie.class);
+        MovieResponse movie = objectMapper.readValue(response.getBody(), MovieResponse.class);
 
         assertThat(movie.getTitle()).isEqualTo(saved.getTitle());
     }
@@ -475,7 +479,7 @@ public class MovieControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
 
-        Movie movie = objectMapper.readValue(response.getBody(), Movie.class);
+        MovieResponse movie = objectMapper.readValue(response.getBody(), MovieResponse.class);
 
         assertThat(movie.getTitle()).isEqualTo(saved.getTitle());
     }
@@ -498,7 +502,7 @@ public class MovieControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
 
-        Movie movie = objectMapper.readValue(response.getBody(), Movie.class);
+        MovieResponse movie = objectMapper.readValue(response.getBody(), MovieResponse.class);
 
         assertThat(movie.getTitle()).isEqualTo(saved.getTitle());
     }
@@ -580,7 +584,7 @@ public class MovieControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
 
-        List<Movie> movies = objectMapper.readValue(response.getBody(), new TypeReference<>() {
+        List<MovieResponse> movies = objectMapper.readValue(response.getBody(), new TypeReference<>() {
         });
 
         assertThat(movies.size()).isEqualTo(3);
@@ -606,7 +610,7 @@ public class MovieControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
 
-        List<Movie> movies = objectMapper.readValue(response.getBody(), new TypeReference<>() {
+        List<MovieResponse> movies = objectMapper.readValue(response.getBody(), new TypeReference<>() {
         });
 
         assertThat(movies.size()).isEqualTo(3);
@@ -632,7 +636,7 @@ public class MovieControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
 
-        List<Movie> movies = objectMapper.readValue(response.getBody(), new TypeReference<>() {
+        List<MovieResponse> movies = objectMapper.readValue(response.getBody(), new TypeReference<>() {
         });
 
         assertThat(movies.size()).isEqualTo(3);

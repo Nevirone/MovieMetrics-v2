@@ -19,13 +19,13 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class MovieService implements IObjectService<Movie, MovieDto, MovieResponse> {
+public class MovieService implements IObjectService<Movie, MovieDto> {
     private final IMovieRepository movieRepository;
     private final IMovieClassificationRepository movieClassificationRepository;
     private final IGenreRepository genreRepository;
 
     @Override
-    public MovieResponse create(MovieDto movieDto) throws DataConflictException, NotFoundException {
+    public Movie create(MovieDto movieDto) throws DataConflictException, NotFoundException {
         if (movieRepository.existsByTitleIgnoreCase(movieDto.getTitle()))
             throw DataConflictException.titleTaken(movieDto.getTitle());
 
@@ -39,7 +39,7 @@ public class MovieService implements IObjectService<Movie, MovieDto, MovieRespon
                 return genreRepository.getReferenceById(genreId);
         }).toList();
 
-        Movie created = movieRepository.save(
+        return movieRepository.save(
                 Movie.builder()
                         .title(movieDto.getTitle())
                         .description(movieDto.getDescription())
@@ -47,30 +47,26 @@ public class MovieService implements IObjectService<Movie, MovieDto, MovieRespon
                         .classification(movieClassificationRepository.getReferenceById(movieDto.getClassificationId()))
                         .build()
         );
-
-        return new MovieResponse(created);
     }
 
     @Override
-    public MovieResponse get(Long id) throws NotFoundException {
-        Movie found = movieRepository.findById(id)
+    public Movie get(Long id) throws NotFoundException {
+        return movieRepository.findById(id)
                 .orElseThrow(() -> NotFoundException.movieNotFoundById(id));
-        return new MovieResponse(found);
     }
 
-    public MovieResponse getByTitle(String title) throws NotFoundException {
-        Movie found = movieRepository.findByTitleIgnoreCase(title)
+    public Movie getByTitle(String title) throws NotFoundException {
+        return movieRepository.findByTitleIgnoreCase(title)
                 .orElseThrow(() -> NotFoundException.movieNotFoundByTitle(title));
-        return new MovieResponse(found);
     }
 
     @Override
-    public List<MovieResponse> getAll() {
-        return movieRepository.findAll().stream().map(MovieResponse::new).toList();
+    public List<Movie> getAll() {
+        return movieRepository.findAll();
     }
 
     @Override
-    public MovieResponse update(Long id, MovieDto movieDto) throws DataConflictException, NotFoundException {
+    public Movie update(Long id, MovieDto movieDto) throws DataConflictException, NotFoundException {
         if (!movieRepository.existsById(id))
             throw NotFoundException.movieNotFoundById(id);
 
@@ -89,7 +85,7 @@ public class MovieService implements IObjectService<Movie, MovieDto, MovieRespon
                 return genreRepository.getReferenceById(genreId);
         }).toList();
 
-        Movie updated = movieRepository.save(
+        return movieRepository.save(
                 Movie.builder()
                         .id(id)
                         .title(movieDto.getTitle())
@@ -98,16 +94,15 @@ public class MovieService implements IObjectService<Movie, MovieDto, MovieRespon
                         .classification(movieClassificationRepository.getReferenceById(movieDto.getClassificationId()))
                         .build()
         );
-        return new MovieResponse(updated);
     }
 
     @Override
-    public MovieResponse delete(Long id) throws NotFoundException {
+    public Movie delete(Long id) throws NotFoundException {
         Movie found = movieRepository.findById(id)
                 .orElseThrow(() -> NotFoundException.movieNotFoundById(id));
 
         movieRepository.deleteById(id);
 
-        return new MovieResponse(found);
+        return found;
     }
 }

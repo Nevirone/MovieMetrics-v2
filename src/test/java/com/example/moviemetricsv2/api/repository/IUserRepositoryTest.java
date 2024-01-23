@@ -27,6 +27,7 @@ class IUserRepositoryTest {
         String email = "test@test.com";
         Role role = roleRepository.save(
                 Role.builder()
+                        .id(1L)
                         .name("TestRole")
                         .permissions(new ArrayList<>())
                         .build()
@@ -49,6 +50,7 @@ class IUserRepositoryTest {
         String email = "tEsT@Test.com";
         Role role = roleRepository.save(
                 Role.builder()
+                        .id(1L)
                         .name("TestRole")
                         .permissions(new ArrayList<>())
                         .build()
@@ -84,6 +86,7 @@ class IUserRepositoryTest {
         String email = "test@test.com";
         Role role = roleRepository.save(
                 Role.builder()
+                        .id(1L)
                         .name("TestRole")
                         .permissions(new ArrayList<>())
                         .build()
@@ -103,6 +106,7 @@ class IUserRepositoryTest {
         String email = "TesT@TEsT.com";
         Role role = roleRepository.save(
                 Role.builder()
+                        .id(1L)
                         .name("TestRole")
                         .permissions(new ArrayList<>())
                         .build()

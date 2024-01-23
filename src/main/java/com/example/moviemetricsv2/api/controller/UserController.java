@@ -26,14 +26,14 @@ public class UserController extends BaseController implements ICrudController<Us
     @PostMapping
     public ResponseEntity<UserResponse> create(@Valid @RequestBody UserDto userDto)
             throws DataConflictException {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new UserResponse(userService.create(userDto)));
     }
 
     @Override
     @PreAuthorize("hasAuthority('DISPLAY_USERS')")
     @GetMapping
     public ResponseEntity<List<UserResponse>> getAll() {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getAll());
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getAll().stream().map(UserResponse::new).toList());
     }
 
     @Override
@@ -41,7 +41,7 @@ public class UserController extends BaseController implements ICrudController<Us
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> get(@PathVariable Long id)
             throws NotFoundException {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.get(id));
+        return ResponseEntity.status(HttpStatus.OK).body(new UserResponse(userService.get(id)));
     }
 
     @Override
@@ -49,7 +49,7 @@ public class UserController extends BaseController implements ICrudController<Us
     @PatchMapping("/{id}")
     public ResponseEntity<UserResponse> update(@PathVariable Long id, @Valid @RequestBody UserDto userDto)
             throws NotFoundException, DataConflictException {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.update(id, userDto));
+        return ResponseEntity.status(HttpStatus.OK).body(new UserResponse(userService.update(id, userDto)));
     }
 
     @Override
@@ -57,6 +57,6 @@ public class UserController extends BaseController implements ICrudController<Us
     @DeleteMapping("/{id}")
     public ResponseEntity<UserResponse> delete(@PathVariable Long id)
             throws NotFoundException {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.delete(id));
+        return ResponseEntity.status(HttpStatus.OK).body(new UserResponse(userService.delete(id)));
     }
 }

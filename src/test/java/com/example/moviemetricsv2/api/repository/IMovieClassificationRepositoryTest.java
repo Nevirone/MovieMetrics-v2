@@ -20,7 +20,7 @@ class IMovieClassificationRepositoryTest {
     void testCanFindClassificationByName() {
         // given
         String name = "PG";
-        MovieClassification movieClassification = MovieClassification.builder().name(name).build();
+        MovieClassification movieClassification = MovieClassification.builder().id(1L).name(name).build();
 
         movieClassificationRepository.save(movieClassification);
 
@@ -37,7 +37,7 @@ class IMovieClassificationRepositoryTest {
     void testCanFindClassificationByNameCaseInsensitive() {
         // given
         String name = "Pg";
-        MovieClassification movieClassification = MovieClassification.builder().name(name.toLowerCase()).build();
+        MovieClassification movieClassification = MovieClassification.builder().id(1L).name(name.toLowerCase()).build();
 
         movieClassificationRepository.save(movieClassification);
 
@@ -67,7 +67,7 @@ class IMovieClassificationRepositoryTest {
     void testCanCheckNameExists() {
         // given
         String name = "Pg";
-        MovieClassification movieClassification = MovieClassification.builder().name(name).build();
+        MovieClassification movieClassification = MovieClassification.builder().id(1L).name(name).build();
 
         movieClassificationRepository.save(movieClassification);
 
@@ -81,7 +81,7 @@ class IMovieClassificationRepositoryTest {
     void testCanCheckNameExistsCaseInsensitive() {
         // given
         String name = "PG";
-        MovieClassification movieClassification = MovieClassification.builder().name(name.toLowerCase()).build();
+        MovieClassification movieClassification = MovieClassification.builder().id(1L).id(1L).name(name.toLowerCase()).build();
 
         movieClassificationRepository.save(movieClassification);
 

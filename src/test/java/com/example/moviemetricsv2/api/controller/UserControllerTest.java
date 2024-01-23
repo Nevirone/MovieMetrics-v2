@@ -9,6 +9,7 @@ import com.example.moviemetricsv2.api.repository.IRoleRepository;
 import com.example.moviemetricsv2.api.repository.IUserRepository;
 import com.example.moviemetricsv2.api.request.AuthenticationRequest;
 import com.example.moviemetricsv2.api.response.AuthenticationResponse;
+import com.example.moviemetricsv2.api.response.UserResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -145,7 +146,7 @@ public class UserControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.CREATED.value());
 
-        User user = objectMapper.readValue(response.getBody(), User.class);
+        UserResponse user = objectMapper.readValue(response.getBody(), UserResponse.class);
 
         assertThat(user.getEmail()).isEqualTo(userDto.getEmail());
     }
@@ -289,7 +290,7 @@ public class UserControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
 
-        User user = objectMapper.readValue(response.getBody(), User.class);
+        UserResponse user = objectMapper.readValue(response.getBody(), UserResponse.class);
 
         assertThat(user.getEmail()).isEqualTo(userDto.getEmail());
     }
@@ -464,7 +465,7 @@ public class UserControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
 
-        User user = objectMapper.readValue(response.getBody(), User.class);
+        UserResponse user = objectMapper.readValue(response.getBody(), UserResponse.class);
 
         assertThat(user.getEmail()).isEqualTo(saved.getEmail());
     }
@@ -487,7 +488,7 @@ public class UserControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
 
-        User user = objectMapper.readValue(response.getBody(), User.class);
+        UserResponse user = objectMapper.readValue(response.getBody(), UserResponse.class);
 
         assertThat(user.getEmail()).isEqualTo(saved.getEmail());
     }
@@ -567,7 +568,7 @@ public class UserControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
 
-        User user = objectMapper.readValue(response.getBody(), User.class);
+        UserResponse user = objectMapper.readValue(response.getBody(), UserResponse.class);
 
         assertThat(user.getEmail()).isEqualTo(saved.getEmail());
     }
@@ -668,8 +669,7 @@ public class UserControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
 
-        List<User> users = objectMapper.readValue(response.getBody(), new TypeReference<>() {
-        });
+        List<UserResponse> users = objectMapper.readValue(response.getBody(), new TypeReference<>() {});
 
         assertThat(users.size()).isEqualTo(6); // 3 created and 3 for testing permissions
     }
@@ -694,7 +694,7 @@ public class UserControllerTest {
         System.out.println(response.getStatusCode());
         assertThat(response.getStatusCode().value()).isEqualTo(HttpStatus.OK.value());
 
-        List<User> users = objectMapper.readValue(response.getBody(), new TypeReference<>() {
+        List<UserResponse> users = objectMapper.readValue(response.getBody(), new TypeReference<>() {
         });
 
         assertThat(users.size()).isEqualTo(6); // 3 created and 3 for testing permissions

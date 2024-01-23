@@ -24,7 +24,7 @@ class IMovieRepositoryTest {
         // given
         String title = "Saw";
         MovieClassification classification = movieClassificationRepository.save(
-                MovieClassification.builder().name("PG").build()
+                MovieClassification.builder().id(1L).name("PG").build()
         );
         Movie movie = Movie.builder().title(title).description("test").classification(classification).build();
 
@@ -44,7 +44,7 @@ class IMovieRepositoryTest {
         // given
         String title = "Saw";
         MovieClassification classification = movieClassificationRepository.save(
-                MovieClassification.builder().name("PG").build()
+                MovieClassification.builder().id(1L).name("PG").build()
         );
         Movie movie = Movie.builder().title(title.toLowerCase()).description("test").classification(classification).build();
 
@@ -77,7 +77,7 @@ class IMovieRepositoryTest {
         // given
         String title = "Saw";
         MovieClassification classification = movieClassificationRepository.save(
-                MovieClassification.builder().name("PG").build()
+                MovieClassification.builder().id(1L).name("PG").build()
         );
         Movie movie = Movie.builder().title(title).description("test").classification(classification).build();
 
@@ -94,7 +94,7 @@ class IMovieRepositoryTest {
         // given
         String title = "Saw";
         MovieClassification classification = movieClassificationRepository.save(
-                MovieClassification.builder().name("PG").build()
+                MovieClassification.builder().id(1L).name("PG").build()
         );
         Movie movie = Movie.builder().title(title.toLowerCase()).description("test").classification(classification).build();
 

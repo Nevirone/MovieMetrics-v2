@@ -20,7 +20,7 @@ class IRoleRepositoryTest {
     void testCanFindRoleByName() {
         // given
         String name = "Action";
-        Role role = Role.builder().name(name).build();
+        Role role = Role.builder().id(1L).name(name).build();
 
         roleRepository.save(role);
 
@@ -37,7 +37,7 @@ class IRoleRepositoryTest {
     void testCanFindRoleByNameCaseInsensitive() {
         // given
         String name = "AcTion";
-        Role role = Role.builder().name(name.toLowerCase()).build();
+        Role role = Role.builder().id(1L).name(name.toLowerCase()).build();
 
         roleRepository.save(role);
 
@@ -67,7 +67,7 @@ class IRoleRepositoryTest {
     void testCanCheckNameExists() {
         // given
         String name = "Action";
-        Role role = Role.builder().name(name).build();
+        Role role = Role.builder().id(1L).name(name).build();
 
         roleRepository.save(role);
 
@@ -81,7 +81,7 @@ class IRoleRepositoryTest {
     void testCanCheckNameExistsCaseInsensitive() {
         // given
         String name = "AcTIon";
-        Role role = Role.builder().name(name.toLowerCase()).build();
+        Role role = Role.builder().id(1L).name(name.toLowerCase()).build();
 
         roleRepository.save(role);
 

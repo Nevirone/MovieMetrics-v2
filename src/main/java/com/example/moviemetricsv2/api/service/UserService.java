@@ -17,20 +17,20 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class UserService implements IObjectService<User, UserDto, UserResponse> {
+public class UserService implements IObjectService<User, UserDto> {
     private final IUserRepository userRepository;
     private final IRoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public UserResponse create(UserDto userDto) {
+    public User create(UserDto userDto) {
         if (userRepository.existsByEmailIgnoreCase(userDto.getEmail()))
             throw DataConflictException.emailTaken(userDto.getEmail());
 
         if (!roleRepository.existsById(userDto.getRoleId()))
             throw NotFoundException.roleNotFoundById(userDto.getRoleId());
 
-        User created = userRepository.save(
+        return userRepository.save(
                 User.builder()
                         .email(userDto.getEmail())
                         .password(
@@ -41,32 +41,28 @@ public class UserService implements IObjectService<User, UserDto, UserResponse> 
                         .role(roleRepository.getReferenceById(userDto.getRoleId()))
                         .build()
         );
-        return new UserResponse(created);
     }
 
     @Override
-    public UserResponse get(Long id) throws NotFoundException {
-        User found = userRepository.findById(id)
+    public User get(Long id) throws NotFoundException {
+
+        return userRepository.findById(id)
                 .orElseThrow(() -> NotFoundException.userNotFoundById(id));
-
-        return new UserResponse(found);
     }
 
-    public UserResponse getByEmail(String email) {
-        User found = userRepository.findByEmailIgnoreCase(email)
+    public User getByEmail(String email) {
+
+        return userRepository.findByEmailIgnoreCase(email)
                 .orElseThrow(() -> NotFoundException.userNotFoundByEmail(email));
-
-        return new UserResponse(found);
-
     }
 
     @Override
-    public List<UserResponse> getAll() {
-        return userRepository.findAll().stream().map(UserResponse::new).toList();
+    public List<User> getAll() {
+        return userRepository.findAll();
     }
 
     @Override
-    public UserResponse update(Long id, UserDto userDto) throws DataConflictException, NotFoundException {
+    public User update(Long id, UserDto userDto) throws DataConflictException, NotFoundException {
         if (!userRepository.existsById(id))
             throw NotFoundException.userNotFoundById(id);
 
@@ -78,7 +74,7 @@ public class UserService implements IObjectService<User, UserDto, UserResponse> 
         if (!roleRepository.existsById(userDto.getRoleId()))
             throw NotFoundException.roleNotFoundById(userDto.getRoleId());
 
-        User updated = userRepository.save(
+        return userRepository.save(
                 User.builder()
                         .id(id)
                         .email(userDto.getEmail())
@@ -90,16 +86,15 @@ public class UserService implements IObjectService<User, UserDto, UserResponse> 
                         .role(roleRepository.getReferenceById(userDto.getRoleId()))
                         .build()
         );
-        return new UserResponse(updated);
     }
 
     @Override
-    public UserResponse delete(Long id) throws NotFoundException {
+    public User delete(Long id) throws NotFoundException {
         User found = userRepository.findById(id)
                 .orElseThrow(() -> NotFoundException.userNotFoundById(id));
 
         userRepository.deleteById(id);
 
-        return new UserResponse(found);
+        return found;
     }
 }

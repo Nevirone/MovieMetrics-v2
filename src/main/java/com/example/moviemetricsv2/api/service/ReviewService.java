@@ -26,12 +26,12 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ReviewService implements IObjectService<Review, ReviewDto, ReviewResponse>{
+public class ReviewService implements IObjectService<Review, ReviewDto>{
     private final IReviewRepository reviewRepository;
     private final IMovieRepository movieRepository;
     private final IUserRepository userRepository;
 
-    public ReviewResponse create(ReviewDto reviewDto) throws DataConflictException {
+    public Review create(ReviewDto reviewDto) throws DataConflictException {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (!movieRepository.existsById(reviewDto.getMovieId()))
@@ -41,40 +41,38 @@ public class ReviewService implements IObjectService<Review, ReviewDto, ReviewRe
             throw DataConflictException.reviewExists(user.getId(), reviewDto.getMovieId());
 
 
-        Review created = reviewRepository.save(Review.builder()
+        return reviewRepository.save(Review.builder()
                 .movie(movieRepository.getReferenceById(reviewDto.getMovieId()))
                 .author(user)
                 .score(reviewDto.getScore())
                 .content(reviewDto.getContent())
                 .build()
         );
-        return new ReviewResponse(created);
     }
 
-    public ReviewResponse get(Long id) throws NotFoundException {
-        Review found = reviewRepository.findById(id)
+    public Review get(Long id) throws NotFoundException {
+        return reviewRepository.findById(id)
                 .orElseThrow(() -> NotFoundException.reviewNotFoundById(id));
-        return new ReviewResponse(found);
     }
 
-    public List<ReviewResponse> getAll() {
-        return reviewRepository.findAll().stream().map(ReviewResponse::new).toList();
+    public List<Review> getAll() {
+        return reviewRepository.findAll();
     }
 
-    public List<ReviewResponse> getAllOfMovie(Long movieId) throws NotFoundException {
+    public List<Review> getAllOfMovie(Long movieId) throws NotFoundException {
         if (!movieRepository.existsById(movieId))
             throw NotFoundException.movieNotFoundById(movieId);
 
-        return reviewRepository.findAllByMovieId(movieId).stream().map(ReviewResponse::new).toList();
+        return reviewRepository.findAllByMovieId(movieId);
     }
-    public List<ReviewResponse> getAllOfUser(Long userId) throws NotFoundException {
+    public List<Review> getAllOfUser(Long userId) throws NotFoundException {
         if (!userRepository.existsById(userId))
             throw NotFoundException.userNotFoundById(userId);
 
-        return reviewRepository.findAllByAuthorId(userId).stream().map(ReviewResponse::new).toList();
+        return reviewRepository.findAllByAuthorId(userId);
     }
 
-    public ReviewResponse updateOwn(Long id, ReviewDto reviewDto) throws NotFoundException, PermissionException {
+    public Review updateOwn(Long id, ReviewDto reviewDto) throws NotFoundException, PermissionException {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Review review = reviewRepository.findById(id)
@@ -86,22 +84,20 @@ public class ReviewService implements IObjectService<Review, ReviewDto, ReviewRe
         review.setScore(reviewDto.getScore());
         review.setContent(reviewDto.getContent());
 
-        Review saved = reviewRepository.save(review);
-        return new ReviewResponse(saved);
+        return reviewRepository.save(review);
     }
 
-    public ReviewResponse update(Long id, ReviewDto reviewDto) throws NotFoundException {
+    public Review update(Long id, ReviewDto reviewDto) throws NotFoundException {
         Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> NotFoundException.reviewNotFoundById(id));
 
         review.setScore(reviewDto.getScore());
         review.setContent(reviewDto.getContent());
 
-        Review updated = reviewRepository.save(review);
-        return new ReviewResponse(updated);
+        return reviewRepository.save(review);
     }
 
-    public ReviewResponse deleteOwn(Long id) throws NotFoundException, PermissionException {
+    public Review deleteOwn(Long id) throws NotFoundException, PermissionException {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Review review = reviewRepository.findById(id)
@@ -112,15 +108,15 @@ public class ReviewService implements IObjectService<Review, ReviewDto, ReviewRe
 
         reviewRepository.deleteById(id);
 
-        return new ReviewResponse(review);
+        return review;
     }
 
-    public ReviewResponse delete(Long id) throws NotFoundException {
+    public Review delete(Long id) throws NotFoundException {
         Review found = reviewRepository.findById(id)
                 .orElseThrow(() -> NotFoundException.reviewNotFoundById(id));
 
         reviewRepository.deleteById(id);
 
-        return new ReviewResponse(found);
+        return found;
     }
 }

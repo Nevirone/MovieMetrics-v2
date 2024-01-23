@@ -3,18 +3,21 @@ package com.example.moviemetricsv2.api.service;
 import com.example.moviemetricsv2.api.dto.MovieDto;
 import com.example.moviemetricsv2.api.exception.DataConflictException;
 import com.example.moviemetricsv2.api.exception.NotFoundException;
+import com.example.moviemetricsv2.api.model.Genre;
 import com.example.moviemetricsv2.api.model.Movie;
 import com.example.moviemetricsv2.api.model.MovieClassification;
+import com.example.moviemetricsv2.api.repository.IGenreRepository;
 import com.example.moviemetricsv2.api.repository.IMovieClassificationRepository;
 import com.example.moviemetricsv2.api.repository.IMovieRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.example.moviemetricsv2.api.response.MovieResponse;
+import org.junit.jupiter.api.*;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -30,11 +33,13 @@ class MovieServiceTest {
     private IMovieRepository movieRepository;
     @Mock
     private IMovieClassificationRepository movieClassificationRepository;
-
+    @Mock
+    private IGenreRepository genreRepository;
     private MovieService movieService;
 
     private Movie createMovie() {
         return Movie.builder()
+                .id(1L)
                 .title("Test")
                 .description("Test description")
                 .classification(
@@ -43,6 +48,7 @@ class MovieServiceTest {
                                 .name("PG")
                                 .build()
                 )
+                .genres(new ArrayList<>())
                 .build();
     }
 
@@ -51,13 +57,14 @@ class MovieServiceTest {
                 .title("Test")
                 .description("Test description")
                 .classificationId(1L)
+                .genreIds(new ArrayList<>())
                 .build();
     }
 
     @BeforeEach
     void setUp() {
         autoCloseable = MockitoAnnotations.openMocks(this);
-        movieService = new MovieService(movieRepository, movieClassificationRepository);
+        movieService = new MovieService(movieRepository, movieClassificationRepository, genreRepository);
     }
 
     @AfterEach
@@ -66,7 +73,7 @@ class MovieServiceTest {
     }
 
     @Test
-    @DisplayName("Create Movie: Successful")
+    @DisplayName("Create Movie: Successful no genres")
     void canAddMovie() {
         // given
         MovieDto movieDto = createMovieDto();
@@ -74,13 +81,37 @@ class MovieServiceTest {
         given(movieRepository.existsByTitleIgnoreCase(movieDto.getTitle()))
                 .willReturn(false);
 
-        given(movieClassificationRepository.findById(movieDto.getClassificationId()))
-                .willReturn(Optional.of(
-                        MovieClassification.builder()
-                                .id(movieDto.getClassificationId())
-                                .name("PG")
-                                .build()
-                ));
+        given(movieClassificationRepository.existsById(movieDto.getClassificationId()))
+                .willReturn(true);
+
+        // when
+        movieService.create(movieDto);
+
+        // then
+        ArgumentCaptor<Movie> movieArgumentCaptor = ArgumentCaptor.forClass(Movie.class);
+
+        verify(movieRepository).save(movieArgumentCaptor.capture());
+
+        Movie capturedMovie = movieArgumentCaptor.getValue();
+
+        assertThat(capturedMovie.getTitle()).isEqualTo(movieDto.getTitle());
+    }
+
+    @Test
+    @DisplayName("Create Movie: Successful with genres")
+    void canAddMovieWithGenres() {
+        // given
+        MovieDto movieDto = createMovieDto();
+        movieDto.setGenreIds(List.of(1L));
+
+        given(movieRepository.existsByTitleIgnoreCase(movieDto.getTitle()))
+                .willReturn(false);
+
+        given(movieClassificationRepository.existsById(movieDto.getClassificationId()))
+                .willReturn(true);
+
+        given(genreRepository.existsById(1L))
+                .willReturn(true);
 
         // when
         movieService.create(movieDto);
@@ -128,6 +159,29 @@ class MovieServiceTest {
         assertThatThrownBy(() -> movieService.create(movieDto))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining(NotFoundException.movieClassificationNotFoundById(movieDto.getClassificationId()).getMessage());
+    }
+
+    @Test
+    @DisplayName("Create Movie: Genre not found")
+    void addingMovieWillThrowWhenGenreIsNotFound() {
+        // given
+        MovieDto movieDto = createMovieDto();
+        movieDto.setGenreIds(List.of(1L));
+
+        given(movieRepository.existsByTitleIgnoreCase(movieDto.getTitle()))
+                .willReturn(false);
+
+        given(movieClassificationRepository.existsById(movieDto.getClassificationId()))
+                .willReturn(true);
+
+        given(genreRepository.existsById(1L))
+                .willReturn(false);
+
+        // when
+        // then
+        assertThatThrownBy(() -> movieService.create(movieDto))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessageContaining(NotFoundException.genreNotFoundById(1L).getMessage());
     }
 
     @Test
@@ -210,7 +264,7 @@ class MovieServiceTest {
     }
 
     @Test
-    @DisplayName("Update Movie: Successful")
+    @DisplayName("Update Movie: Successful no genres")
     void canUpdateMovie() {
         // given
         Long id = 2L;
@@ -222,13 +276,8 @@ class MovieServiceTest {
         given(movieRepository.findByTitleIgnoreCase(movieDto.getTitle()))
                 .willReturn(Optional.empty());
 
-        given(movieClassificationRepository.findById(movieDto.getClassificationId()))
-                .willReturn(Optional.of(
-                        MovieClassification.builder()
-                                .id(movieDto.getClassificationId())
-                                .name("PG")
-                                .build()
-                ));
+        given(movieClassificationRepository.existsById(movieDto.getClassificationId()))
+                .willReturn(true);
 
         // when
         movieService.update(id, movieDto);
@@ -237,7 +286,44 @@ class MovieServiceTest {
         ArgumentCaptor<Movie> movieArgumentCaptor = ArgumentCaptor.forClass(Movie.class);
 
         verify(movieRepository).existsById(id);
-        verify(movieRepository).existsByTitleIgnoreCase(movieDto.getTitle());
+        verify(movieRepository).findByTitleIgnoreCase(movieDto.getTitle());
+
+        verify(movieRepository).save(movieArgumentCaptor.capture());
+
+        Movie capturedMovie = movieArgumentCaptor.getValue();
+
+        assertThat(capturedMovie.getId()).isEqualTo(id);
+        assertThat(capturedMovie.getTitle()).isEqualTo(movieDto.getTitle());
+    }
+
+    @Test
+    @DisplayName("Update Movie: Successful with genres")
+    void canUpdateMovieWithGenres() {
+        // given
+        Long id = 2L;
+        MovieDto movieDto = createMovieDto();
+        movieDto.setGenreIds(List.of(1L));
+
+        given(movieRepository.existsById(2L))
+                .willReturn(true);
+
+        given(movieRepository.findByTitleIgnoreCase(movieDto.getTitle()))
+                .willReturn(Optional.empty());
+
+        given(movieClassificationRepository.existsById(movieDto.getClassificationId()))
+                .willReturn(true);
+
+        given(genreRepository.existsById(1L))
+                .willReturn(true);
+
+        // when
+        movieService.update(id, movieDto);
+
+        // then
+        ArgumentCaptor<Movie> movieArgumentCaptor = ArgumentCaptor.forClass(Movie.class);
+
+        verify(movieRepository).existsById(id);
+        verify(movieRepository).findByTitleIgnoreCase(movieDto.getTitle());
 
         verify(movieRepository).save(movieArgumentCaptor.capture());
 
@@ -273,8 +359,8 @@ class MovieServiceTest {
         given(movieRepository.existsById(2L))
                 .willReturn(true);
 
-        given(movieRepository.existsByTitleIgnoreCase(movieDto.getTitle()))
-                .willReturn(true);
+        given(movieRepository.findByTitleIgnoreCase(movieDto.getTitle()))
+                .willReturn(Optional.of(createMovie()));
 
         // when
         // then
@@ -304,6 +390,34 @@ class MovieServiceTest {
         assertThatThrownBy(() -> movieService.update(id, movieDto))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining(NotFoundException.movieClassificationNotFoundById(movieDto.getClassificationId()).getMessage());
+    }
+
+    @Test
+    @DisplayName("Update Movie: Genre not found")
+    void updatingMovieWillThrowWhenGenreNotFound() {
+        // given
+        Long id = 2L;
+        MovieDto movieDto = createMovieDto();
+        movieDto.setGenreIds(List.of(1L));
+
+        given(movieRepository.existsById(2L))
+                .willReturn(true);
+
+        given(movieRepository.findByTitleIgnoreCase(movieDto.getTitle()))
+                .willReturn(Optional.empty());
+
+        given(movieClassificationRepository.existsById(movieDto.getClassificationId()))
+                .willReturn(true);
+
+        given(genreRepository.existsById(1L))
+                .willReturn(false);
+
+        // when
+        // then
+        assertThatThrownBy(() -> movieService.update(id, movieDto))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessageContaining(NotFoundException.genreNotFoundById(1L).getMessage());
+
     }
 
     @Test

@@ -8,6 +8,7 @@ import com.example.moviemetricsv2.api.model.Role;
 import com.example.moviemetricsv2.api.model.User;
 import com.example.moviemetricsv2.api.repository.IRoleRepository;
 import com.example.moviemetricsv2.api.repository.IUserRepository;
+import com.example.moviemetricsv2.api.response.UserResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -40,6 +41,7 @@ class UserServiceTest {
 
     private User createUser() {
         return User.builder()
+                .id(1L)
                 .email("test@test.com")
                 .password("TestPassword1")
                 .role(
@@ -81,13 +83,8 @@ class UserServiceTest {
         given(userRepository.existsByEmailIgnoreCase(userDto.getEmail()))
                 .willReturn(false);
 
-        given(roleRepository.findById(userDto.getRoleId()))
-                .willReturn(Optional.of(
-                        Role.builder()
-                                .id(userDto.getRoleId())
-                                .name(ERole.User.getName())
-                                .build()
-                ));
+        given(roleRepository.existsById(userDto.getRoleId()))
+                .willReturn(true);
 
         // when
         userService.create(userDto);
@@ -207,7 +204,7 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("Get All users: Successful")
+    @DisplayName("Get All Users: Successful")
     void getAllUsers() {
         // when
         userService.getAll();
@@ -229,12 +226,7 @@ class UserServiceTest {
         given(userRepository.findByEmailIgnoreCase(userDto.getEmail()))
                 .willReturn(Optional.empty());
 
-        given(roleRepository.findById(userDto.getRoleId())).willReturn(Optional.of(
-                Role.builder()
-                        .id(userDto.getRoleId())
-                        .name(ERole.User.getName())
-                        .build()
-        ));
+        given(roleRepository.existsById(userDto.getRoleId())).willReturn(true);
 
         // when
         userService.update(id, userDto);
@@ -243,7 +235,7 @@ class UserServiceTest {
         ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
 
         verify(userRepository).existsById(id);
-        verify(userRepository).existsByEmailIgnoreCase(userDto.getEmail());
+        verify(userRepository).findByEmailIgnoreCase(userDto.getEmail());
 
         verify(userRepository).save(userArgumentCaptor.capture());
 
@@ -279,8 +271,8 @@ class UserServiceTest {
         given(userRepository.existsById(2L))
                 .willReturn(true);
 
-        given(userRepository.existsByEmailIgnoreCase(userDto.getEmail()))
-                .willReturn(true);
+        given(userRepository.findByEmailIgnoreCase(userDto.getEmail()))
+                .willReturn(Optional.of(createUser()));
 
         // when
         // then
@@ -319,7 +311,7 @@ class UserServiceTest {
         Long id = 2L;
 
         given(userRepository.findById(id))
-                .willReturn(Optional.of(User.builder().build()));
+                .willReturn(Optional.of(createUser()));
 
         // when
         userService.delete(id);

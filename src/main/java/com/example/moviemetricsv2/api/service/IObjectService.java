@@ -5,14 +5,14 @@ import com.example.moviemetricsv2.api.exception.NotFoundException;
 
 import java.util.List;
 
-public interface IObjectService<T, TDto, TResponse> {
-    TResponse create(TDto dto) throws DataConflictException;
+public interface IObjectService<T, TDto> {
+    T create(TDto dto) throws DataConflictException;
 
-    TResponse get(Long id) throws NotFoundException;
+    T get(Long id) throws NotFoundException;
 
-    List<TResponse> getAll();
+    List<T> getAll();
 
-    TResponse update(Long id, TDto dto) throws DataConflictException, NotFoundException;
+    T update(Long id, TDto dto) throws DataConflictException, NotFoundException;
 
-    TResponse delete(Long id) throws NotFoundException;
+    T delete(Long id) throws NotFoundException;
 }

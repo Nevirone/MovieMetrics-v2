@@ -10,6 +10,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,7 +46,7 @@ class RoleServiceTest {
                 .willReturn(Optional.of(Role.builder().name(name).build()));
 
         // when
-        roleService.findOrCreate(name, List.of());
+        roleService.findOrCreate( 1L, name, List.of());
 
         // then
         verify(roleRepository).findByNameIgnoreCase(name);
@@ -60,7 +61,7 @@ class RoleServiceTest {
                 .willReturn(Optional.empty());
 
         // when
-        roleService.findOrCreate(name, List.of());
+        roleService.findOrCreate(1L, name, List.of());
 
         // then
         ArgumentCaptor<Role> roleArgumentCaptor = ArgumentCaptor.forClass(Role.class);
@@ -82,7 +83,7 @@ class RoleServiceTest {
                 .willReturn(true);
 
         // when
-        roleService.createIfNotFound(name, List.of());
+        roleService.createIfNotFound(1L, name, List.of());
 
         // then
         verify(roleRepository).existsByNameIgnoreCase(name);
@@ -97,7 +98,7 @@ class RoleServiceTest {
                 .willReturn(false);
 
         // when
-        roleService.createIfNotFound(name, List.of());
+        roleService.createIfNotFound(1L, name, List.of());
 
         // then
         ArgumentCaptor<Role> roleArgumentCaptor = ArgumentCaptor.forClass(Role.class);
@@ -108,5 +109,19 @@ class RoleServiceTest {
         Role capturedRole = roleArgumentCaptor.getValue();
 
         assertThat(capturedRole.getName()).isEqualTo(name);
+    }
+
+    @Test
+    @DisplayName("Get All Roles: Successful")
+    void getAllRoles() {
+        // given
+        given(roleRepository.findAll())
+                .willReturn(new ArrayList<>());
+
+        // when
+        roleService.getAll();
+
+        // then
+        verify(roleRepository).findAll();
     }
 }

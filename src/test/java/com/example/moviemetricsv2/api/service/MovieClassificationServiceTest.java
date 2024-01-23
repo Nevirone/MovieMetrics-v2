@@ -10,6 +10,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -40,11 +41,12 @@ class MovieClassificationServiceTest {
     void canFindOrCreateWhenFound() {
         // given
         String name = "PG";
+        String brief = "Parental Guideline Suggested";
         given(movieClassificationRepository.findByNameIgnoreCase(name))
                 .willReturn(Optional.of(MovieClassification.builder().name(name).build()));
 
         // when
-        movieClassificationService.findOrCreate(name);
+        movieClassificationService.findOrCreate(1L, name, brief);
 
         // then
         verify(movieClassificationRepository).findByNameIgnoreCase(name);
@@ -55,11 +57,12 @@ class MovieClassificationServiceTest {
     void canFindOrCreateWhenNotFound() {
         // given
         String name = "PG";
+        String brief = "Parental Guideline Suggested";
         given(movieClassificationRepository.findByNameIgnoreCase(name))
                 .willReturn(Optional.empty());
 
         // when
-        movieClassificationService.findOrCreate(name);
+        movieClassificationService.findOrCreate(1L, name, brief);
 
         // then
         ArgumentCaptor<MovieClassification> movieClassificationArgumentCaptor = ArgumentCaptor.forClass(MovieClassification.class);
@@ -77,11 +80,12 @@ class MovieClassificationServiceTest {
     void canCreateIfNotFoundWhenFound() {
         // given
         String name = "PG";
+        String brief = "Parental Guideline Suggested";
         given(movieClassificationRepository.existsByNameIgnoreCase(name))
                 .willReturn(true);
 
         // when
-        movieClassificationService.createIfNotFound(name);
+        movieClassificationService.createIfNotFound(1L, name, brief);
 
         // then
         verify(movieClassificationRepository).existsByNameIgnoreCase(name);
@@ -92,11 +96,12 @@ class MovieClassificationServiceTest {
     void canCreateIfNotFoundWhenNotFound() {
         // given
         String name = "PG";
+        String brief = "Parental Guideline Suggested";
         given(movieClassificationRepository.existsByNameIgnoreCase(name))
                 .willReturn(false);
 
         // when
-        movieClassificationService.createIfNotFound(name);
+        movieClassificationService.createIfNotFound(1L, name, brief);
 
         // then
         ArgumentCaptor<MovieClassification> movieClassificationArgumentCaptor = ArgumentCaptor.forClass(MovieClassification.class);
@@ -107,5 +112,19 @@ class MovieClassificationServiceTest {
         MovieClassification capturedMovieClassification = movieClassificationArgumentCaptor.getValue();
 
         assertThat(capturedMovieClassification.getName()).isEqualTo(name);
+    }
+
+    @Test
+    @DisplayName("Get All Classifications: Successful")
+    void getAllClassifications() {
+        // given
+        given(movieClassificationRepository.findAll())
+                .willReturn(new ArrayList<>());
+
+        // when
+        movieClassificationService.getAll();
+
+        // then
+        verify(movieClassificationRepository).findAll();
     }
 }

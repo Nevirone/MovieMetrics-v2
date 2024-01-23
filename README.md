@@ -10,6 +10,9 @@ This project was created using:
 * Spring Boot
 * Spring Security
 * PostgreSQL
-* JWT Tokens
 * Lombok
 * JUnit
+
+
+## Technologies
+This project is a rework of original Movie Metrics. I will use what I learned and take it slow developing better Api.
